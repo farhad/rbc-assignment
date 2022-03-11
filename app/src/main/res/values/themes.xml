@@ -1,5 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <style name="Theme.Rbc" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.Rbc" parent="Theme.MaterialComponents.DayNight.NoActionBar">
 
         <item name="colorPrimary">@color/blue_500</item>
         <item name="colorPrimaryVariant">@color/blue_700</item>
@@ -10,6 +10,5 @@
         <item name="colorOnSecondary">@color/grey_900</item>
 
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
-
     </style>
 </resources>

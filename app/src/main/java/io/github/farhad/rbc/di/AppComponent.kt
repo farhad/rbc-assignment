@@ -3,9 +3,7 @@ package io.github.farhad.rbc.di
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
-import io.github.farhad.rbc.di.modules.ActivityModule
-import io.github.farhad.rbc.di.modules.RepositoryModule
-import io.github.farhad.rbc.di.modules.ViewModelModule
+import io.github.farhad.rbc.di.modules.*
 import io.github.farhad.rbc.ui.App
 
 @AppScope
@@ -13,7 +11,9 @@ import io.github.farhad.rbc.ui.App
     modules = [
         AndroidInjectionModule::class,
         ActivityModule::class,
+        FragmentsModule::class,
         ViewModelModule::class,
+        AccountProviderModule::class,
         RepositoryModule::class]
 )
 interface AppComponent {

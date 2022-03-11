@@ -2,11 +2,11 @@ package io.github.farhad.rbc.di.modules
 
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
-import io.github.farhad.rbc.ui.launcher.LauncherActivity
+import io.github.farhad.rbc.ui.home.HomeActivity
 
 @Module
 abstract class ActivityModule {
 
     @ContributesAndroidInjector
-    abstract fun provideLauncherActivity(): LauncherActivity
+    abstract fun provideLauncherActivity(): HomeActivity
 }

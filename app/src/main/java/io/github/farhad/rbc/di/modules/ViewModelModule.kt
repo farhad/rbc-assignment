@@ -5,13 +5,19 @@ import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
 import io.github.farhad.rbc.di.ViewModelKey
-import io.github.farhad.rbc.ui.launcher.LauncherViewModel
+import io.github.farhad.rbc.ui.home.HomeViewModel
+import io.github.farhad.rbc.ui.splash.SplashViewModel
 
 @Module
 abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(LauncherViewModel::class)
-    abstract fun provideLauncherViewModel(viewModel: LauncherViewModel): ViewModel
+    @ViewModelKey(HomeViewModel::class)
+    abstract fun provideHomeViewModel(viewModel: HomeViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SplashViewModel::class)
+    abstract fun provideSplashViewModel(viewModel: SplashViewModel): ViewModel
 }

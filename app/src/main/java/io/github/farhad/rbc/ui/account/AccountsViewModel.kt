@@ -3,6 +3,7 @@ package io.github.farhad.rbc.ui.account
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.github.farhad.rbc.model.AccountsController
+import io.github.farhad.rbc.ui.util.getFriendlyTitle
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,7 +24,7 @@ class AccountsViewModel @Inject constructor(private val controller: AccountsCont
     init {
         viewModelScope.launch(Dispatchers.IO) {
             _accountsViewState.emit(AccountsViewState.Loading())
-            delay(1500)
+            delay(1500) // to emulate some waiting time
             controller.getAccounts()
                 .catch { _accountsViewState.emit(AccountsViewState.Error()) }
                 .collect { accounts ->
@@ -35,7 +36,7 @@ class AccountsViewModel @Inject constructor(private val controller: AccountsCont
                     val map = accounts.groupBy { it.type }
                     val dataItems = mutableListOf<AccountDataItem>()
                     map.keys.forEach { type ->
-                        dataItems.add(AccountDataItem.Type(title = type.name))
+                        dataItems.add(AccountDataItem.Type(title = type.getFriendlyTitle()))
                         dataItems.addAll(map[type].orEmpty().map { account ->
                             AccountDataItem.Item(
                                 name = account.name,
@@ -52,6 +53,7 @@ class AccountsViewModel @Inject constructor(private val controller: AccountsCont
     }
 
     fun onAccountsSelected(item: AccountDataItem) {
+        // no op
     }
 
 }

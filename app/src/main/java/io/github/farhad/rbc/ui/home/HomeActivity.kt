@@ -61,14 +61,14 @@ class HomeActivity : DaggerAppCompatActivity() {
 
         fragment?.let {
             supportFragmentManager.beginTransaction()
-                .replace(binding.fragmentContainter.id, it, tag)
+                .replace(binding.fragmentContainer.id, it, tag)
                 .addToBackStack(tag)
                 .commit()
         }
     }
 
     override fun onBackPressed() {
-        when (supportFragmentManager.findFragmentById(binding.fragmentContainter.id)) {
+        when (supportFragmentManager.findFragmentById(binding.fragmentContainer.id)) {
             is AccountsFragment -> finish()
             else -> super.onBackPressed()
         }

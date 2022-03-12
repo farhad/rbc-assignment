@@ -8,9 +8,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.*
 import io.github.farhad.rbc.R
 import io.github.farhad.rbc.databinding.AccountItemListItemBinding
 import io.github.farhad.rbc.databinding.AccountTypeListItemBinding
@@ -51,7 +49,7 @@ class AccountsFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setUpRecyclerView()
+        setUpLayout()
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -75,7 +73,9 @@ class AccountsFragment : BaseFragment() {
         }
     }
 
-    private fun setUpRecyclerView() {
+    private fun setUpLayout() {
+        binding.toolbar.title = getString(R.string.title_accounts)
+
         adapter = AccountsAdapter {
             viewModel.onAccountsSelected(it)
         }
@@ -93,20 +93,26 @@ class AccountsFragment : BaseFragment() {
         _binding = null
     }
 
-    class AccountsAdapter(private val clickListener: (item: AccountDataItem) -> Unit) :
-        RecyclerView.Adapter<AccountViewHolder>() {
-        private val list = mutableListOf<AccountDataItem>()
-
-        fun submitList(newList: List<AccountDataItem>) {
-            list.clear()
-            list.addAll(newList)
-            notifyDataSetChanged() // todo(fix this!)
+    class AccountDataItemDiffUtil : DiffUtil.ItemCallback<AccountDataItem>() {
+        override fun areContentsTheSame(
+            oldItem: AccountDataItem,
+            newItem: AccountDataItem
+        ): Boolean {
+            return oldItem == newItem
         }
 
-        override fun getItemCount(): Int = list.size
+        override fun areItemsTheSame(oldItem: AccountDataItem, newItem: AccountDataItem): Boolean {
+            return oldItem == newItem
+        }
+    }
+
+    class AccountsAdapter(private val clickListener: (item: AccountDataItem) -> Unit) :
+        ListAdapter<AccountDataItem, AccountsAdapter.AccountViewHolder>(AccountDataItemDiffUtil()) {
+
+        override fun getItemCount(): Int = currentList.size
 
         override fun getItemViewType(position: Int): Int {
-            return if (list[position] is AccountDataItem.Type) 0 else 1
+            return if (currentList[position] is AccountDataItem.Type) 0 else 1
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AccountViewHolder {
@@ -127,7 +133,7 @@ class AccountsFragment : BaseFragment() {
                             LayoutInflater.from(parent.context),
                             parent,
                             false
-                        ), clickListener
+                        )
                     )
                 }
                 else -> {
@@ -137,35 +143,34 @@ class AccountsFragment : BaseFragment() {
         }
 
         override fun onBindViewHolder(holder: AccountViewHolder, position: Int) {
-            holder.bind(list[holder.bindingAdapterPosition])
+            holder.bind(currentList[holder.bindingAdapterPosition])
         }
-    }
 
-    abstract class AccountViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        abstract fun bind(item: AccountDataItem)
-    }
-
-    class TypeViewHolder(private val binding: AccountTypeListItemBinding) :
-        AccountViewHolder(binding.root) {
-        override fun bind(item: AccountDataItem) {
-            item as AccountDataItem.Type
-            binding.textviewName.text = item.title
+        abstract inner class AccountViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+            abstract fun bind(item: AccountDataItem)
         }
-    }
 
-    class ItemViewHolder(
-        private val binding: AccountItemListItemBinding,
-        private val clickListener: (item: AccountDataItem) -> Unit
-    ) : AccountViewHolder(binding.root) {
+        inner class TypeViewHolder(private val binding: AccountTypeListItemBinding) :
+            AccountViewHolder(binding.root) {
+            override fun bind(item: AccountDataItem) {
+                item as AccountDataItem.Type
+                binding.textviewName.text = item.title
+            }
+        }
 
-        override fun bind(item: AccountDataItem) {
-            item as AccountDataItem.Item
+        inner class ItemViewHolder(
+            private val binding: AccountItemListItemBinding
+        ) : AccountViewHolder(binding.root) {
 
-            binding.textviewName.text = item.name
-            binding.textviewNumber.text = item.number
-            binding.textviewBalance.text = "${item.balance} ${item.currencySymbol}"
-            binding.constraintLayout.setOnClickListener {
-                clickListener.invoke(item)
+            override fun bind(item: AccountDataItem) {
+                item as AccountDataItem.Item
+
+                binding.textviewName.text = item.name
+                binding.textviewNumber.text = item.number
+                binding.textviewBalance.text = "${item.balance} ${item.currencySymbol}"
+                binding.constraintLayout.setOnClickListener {
+                    clickListener.invoke(item)
+                }
             }
         }
     }

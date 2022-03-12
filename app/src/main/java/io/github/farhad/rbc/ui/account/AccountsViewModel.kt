@@ -2,7 +2,7 @@ package io.github.farhad.rbc.ui.account
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import io.github.farhad.rbc.model.AccountsController
+import io.github.farhad.rbc.model.AccountController
 import io.github.farhad.rbc.ui.util.getFriendlyTitle
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
 
-class AccountsViewModel @Inject constructor(private val controller: AccountsController) :
+class AccountsViewModel @Inject constructor(private val controller: AccountController) :
     ViewModel() {
 
     private var _accountsViewState: MutableStateFlow<AccountsViewState> =

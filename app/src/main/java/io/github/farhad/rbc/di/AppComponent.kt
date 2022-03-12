@@ -12,8 +12,9 @@ import io.github.farhad.rbc.ui.App
         AndroidInjectionModule::class,
         ActivityModule::class,
         FragmentsModule::class,
+        ControllerModule::class,
         ViewModelModule::class,
-        AccountProviderModule::class,
+        DataProviderModule::class,
         RepositoryModule::class]
 )
 interface AppComponent {

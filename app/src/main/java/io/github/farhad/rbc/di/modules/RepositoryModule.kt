@@ -1,14 +1,14 @@
 package io.github.farhad.rbc.di.modules
 
-import com.rbc.rbcaccountlibrary.AccountProvider
 import dagger.Module
 import dagger.Provides
-import io.github.farhad.rbc.data.AccountsRepository
+import io.github.farhad.rbc.data.AccountDataProvider
+import io.github.farhad.rbc.data.AccountRepository
 
 @Module
 class RepositoryModule {
 
     @Provides
-    fun provideAccountsRepository(accountProvider: AccountProvider) =
-        AccountsRepository(accountProvider)
+    fun provideAccountsRepository(accountDataProvider: AccountDataProvider) =
+        AccountRepository(accountDataProvider)
 }

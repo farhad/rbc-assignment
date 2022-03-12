@@ -8,14 +8,36 @@
     tools:context=".ui.home.HomeActivity">
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/imageview_logo"
+        android:id="@+id/textview_error"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Accounts"
-        android:textSize="16sp"
+        tools:text="Accounts"
+        android:textColor="@color/grey_900"
+        android:textSize="14sp"
+        android:visibility="gone"
+        tools:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ProgressBar
+        android:id="@+id/progressbar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:indicatorColor="@color/yellow_700"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerview"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

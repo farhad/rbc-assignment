@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">RBC Accounts</string>
+    <string name="error_loading_accounts">There was an error in retrieving your account. Please try again.</string>
+    <string name="error_empty_list_accounts">no accounts to display at the moment</string>
 </resources>

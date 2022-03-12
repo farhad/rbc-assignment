@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.*
 import io.github.farhad.rbc.R
 import io.github.farhad.rbc.databinding.AccountItemListItemBinding
 import io.github.farhad.rbc.databinding.AccountTypeListItemBinding
-import io.github.farhad.rbc.databinding.AccountsFragmentBinding
+import io.github.farhad.rbc.databinding.AccountsListFragmentBinding
 import io.github.farhad.rbc.ui.util.BaseFragment
 import io.github.farhad.rbc.ui.util.changeVisibility
 import kotlinx.coroutines.flow.collect
@@ -27,7 +27,7 @@ class AccountsFragment : BaseFragment() {
     private lateinit var viewModel: AccountsViewModel
     private lateinit var adapter: AccountsAdapter
 
-    private var _binding: AccountsFragmentBinding? = null
+    private var _binding: AccountsListFragmentBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,7 +43,7 @@ class AccountsFragment : BaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = AccountsFragmentBinding.inflate(inflater, container, false)
+        _binding = AccountsListFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
 

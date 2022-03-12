@@ -1,8 +1,11 @@
 package io.github.farhad.rbc.ui.account
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.github.farhad.rbc.model.AccountController
+import io.github.farhad.rbc.ui.navigation.NavigationAction
 import io.github.farhad.rbc.ui.util.getFriendlyTitle
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -17,8 +20,10 @@ import javax.inject.Inject
 class AccountsViewModel @Inject constructor(private val controller: AccountController) :
     ViewModel() {
 
-    private var _accountsViewState: MutableStateFlow<AccountsViewState> =
-        MutableStateFlow(AccountsViewState.Idle())
+    private val _navigationAction = MutableLiveData<NavigationAction>()
+    val navigationAction: LiveData<NavigationAction> = _navigationAction
+
+    private var _accountsViewState = MutableStateFlow<AccountsViewState>(AccountsViewState.Idle())
     val accountsViewState: StateFlow<AccountsViewState> = _accountsViewState
 
     init {
@@ -53,7 +58,10 @@ class AccountsViewModel @Inject constructor(private val controller: AccountContr
     }
 
     fun onAccountsSelected(item: AccountDataItem) {
-        // no op
+        item as AccountDataItem.Item
+
+        _navigationAction.value =
+            NavigationAction.ShowAccountDetails(item.name, item.number, item.balance)
     }
 
 }

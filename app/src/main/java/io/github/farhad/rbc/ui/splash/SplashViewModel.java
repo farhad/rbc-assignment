@@ -10,6 +10,8 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
+import io.github.farhad.rbc.ui.navigation.NavigationAction;
+
 public class SplashViewModel extends ViewModel {
 
     @Inject
@@ -19,11 +21,11 @@ public class SplashViewModel extends ViewModel {
 
     private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
-    private final MutableLiveData<SplashAction> _splashActions = new MutableLiveData<>();
-    public final LiveData<SplashAction> splashActions = _splashActions;
+    private final MutableLiveData<NavigationAction> _navigationAction = new MutableLiveData<>();
+    public final LiveData<NavigationAction> navigationAction = _navigationAction;
 
     public void onDisplayStarted() {
-        executorService.schedule(() -> _splashActions.postValue(new SplashAction.ShowAccounts()), 1, TimeUnit.SECONDS);
+        executorService.schedule(() -> _navigationAction.postValue(new NavigationAction.ShowAccounts()), 1, TimeUnit.SECONDS);
     }
 
     @Override

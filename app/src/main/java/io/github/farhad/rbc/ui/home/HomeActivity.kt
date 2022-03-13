@@ -57,22 +57,30 @@ class HomeActivity : DaggerAppCompatActivity() {
     private fun processNavigationAction(action: NavigationAction) {
         when (action) {
             is NavigationAction.ShowAccounts -> {
-                findAndReplaceFragment(TAG_ACCOUNTS)
+                findAndReplaceFragment(TAG_ACCOUNTS, action)
             }
 
             is NavigationAction.ShowAccountDetails -> {
-                findAndReplaceFragment(TAG_ACCOUNT_DETAILS)
+                findAndReplaceFragment(TAG_ACCOUNT_DETAILS, action)
             }
         }
     }
 
-    private fun findAndReplaceFragment(tag: String) {
+    private fun findAndReplaceFragment(tag: String, action: NavigationAction? = null) {
         var fragment = supportFragmentManager.findFragmentByTag(tag)
         if (fragment == null) {
             fragment = when (tag) {
                 TAG_SPLASH -> SplashFragment.newInstance()
                 TAG_ACCOUNTS -> AccountsFragment.newInstance()
-                TAG_ACCOUNT_DETAILS -> AccountDetailFragment()
+                TAG_ACCOUNT_DETAILS -> {
+                    action as NavigationAction.ShowAccountDetails
+                    AccountDetailFragment.newInstance(
+                        accountName = action.accountName,
+                        accountNumber = action.accountNumber,
+                        accountBalance = action.accountBalance,
+                        accountTypeName = action.accountTypeName
+                    )
+                }
                 else -> null
             }
         }

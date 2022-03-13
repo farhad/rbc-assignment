@@ -49,6 +49,7 @@ sealed class AccountDataItem {
         val name: String,
         val number: String,
         val balance: String,
-        val currencySymbol: String
+        val currencySymbol: String,
+        val typeName: String
     ) : AccountDataItem()
 }

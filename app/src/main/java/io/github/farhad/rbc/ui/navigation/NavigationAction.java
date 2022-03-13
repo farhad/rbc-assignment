@@ -8,11 +8,16 @@ public interface NavigationAction {
         private final String accountName;
         private final String accountNumber;
         private final String accountBalance;
+        private final String accountTypeName;
 
-        public ShowAccountDetails(String accountName, String accountNumber, String accountBalance) {
+        public ShowAccountDetails(String accountName,
+                                  String accountNumber,
+                                  String accountBalance,
+                                  String accountTypeName) {
             this.accountName = accountName;
             this.accountNumber = accountNumber;
             this.accountBalance = accountBalance;
+            this.accountTypeName = accountTypeName;
         }
 
         public String getAccountName() {
@@ -25,6 +30,10 @@ public interface NavigationAction {
 
         public String getAccountBalance() {
             return accountBalance;
+        }
+
+        public String getAccountTypeName() {
+            return accountTypeName;
         }
     }
 }

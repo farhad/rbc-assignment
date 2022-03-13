@@ -6,6 +6,7 @@ import dagger.Module
 import dagger.multibindings.IntoMap
 import io.github.farhad.rbc.di.ViewModelKey
 import io.github.farhad.rbc.ui.account.AccountsViewModel
+import io.github.farhad.rbc.ui.account.detail.AccountDetailViewModel
 import io.github.farhad.rbc.ui.home.HomeViewModel
 import io.github.farhad.rbc.ui.splash.SplashViewModel
 
@@ -26,4 +27,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(AccountsViewModel::class)
     abstract fun provideAccountViewModel(viewModel: AccountsViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(AccountDetailViewModel::class)
+    abstract fun provideAccountDetailViewModel(viewModel: AccountDetailViewModel): ViewModel
 }

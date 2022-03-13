@@ -93,31 +93,42 @@ class AccountsFragment : BaseFragment() {
         _binding = null
     }
 
-    class AccountDataItemDiffUtil : DiffUtil.ItemCallback<AccountDataItem>() {
-        override fun areContentsTheSame(
-            oldItem: AccountDataItem,
-            newItem: AccountDataItem
-        ): Boolean {
-            return oldItem == newItem
-        }
-
-        override fun areItemsTheSame(oldItem: AccountDataItem, newItem: AccountDataItem): Boolean {
-            return oldItem == newItem
-        }
-    }
-
     class AccountsAdapter(private val clickListener: (item: AccountDataItem) -> Unit) :
         ListAdapter<AccountDataItem, AccountsAdapter.AccountViewHolder>(AccountDataItemDiffUtil()) {
+
+        class AccountDataItemDiffUtil : DiffUtil.ItemCallback<AccountDataItem>() {
+            override fun areContentsTheSame(
+                oldItem: AccountDataItem,
+                newItem: AccountDataItem
+            ): Boolean {
+                return oldItem == newItem
+            }
+
+            override fun areItemsTheSame(oldItem: AccountDataItem, newItem: AccountDataItem): Boolean {
+                return oldItem == newItem
+            }
+        }
+
+        enum class ViewType {
+            TYPE,
+            ACCOUNT;
+
+            companion object {
+                fun from(value: Int): ViewType {
+                    return if (value == TYPE.ordinal) TYPE else ACCOUNT
+                }
+            }
+        }
 
         override fun getItemCount(): Int = currentList.size
 
         override fun getItemViewType(position: Int): Int {
-            return if (currentList[position] is AccountDataItem.Type) 0 else 1
+            return if (currentList[position] is AccountDataItem.Type) ViewType.TYPE.ordinal else ViewType.ACCOUNT.ordinal
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AccountViewHolder {
-            return when (viewType) {
-                0 -> {
+            return when (ViewType.from(viewType)) {
+                ViewType.TYPE -> {
                     TypeViewHolder(
                         AccountTypeListItemBinding.inflate(
                             LayoutInflater.from(parent.context),
@@ -127,7 +138,7 @@ class AccountsFragment : BaseFragment() {
                     )
                 }
 
-                1 -> {
+                ViewType.ACCOUNT -> {
                     ItemViewHolder(
                         AccountItemListItemBinding.inflate(
                             LayoutInflater.from(parent.context),
@@ -135,9 +146,6 @@ class AccountsFragment : BaseFragment() {
                             false
                         )
                     )
-                }
-                else -> {
-                    throw IllegalStateException()
                 }
             }
         }

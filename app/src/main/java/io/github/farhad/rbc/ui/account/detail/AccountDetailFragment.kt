@@ -80,9 +80,6 @@ class AccountDetailFragment : BaseFragment() {
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.accountInformation.collect {
-
-                }
 
                 viewModel.accountDetails.collect {
                     binding.progressbar.changeVisibility(it.loadingVisible)
@@ -99,6 +96,10 @@ class AccountDetailFragment : BaseFragment() {
                             binding.textviewError.text = getString(R.string.error_empty_list_transactions)
                         }
                     }
+                }
+
+                viewModel.accountInformation.collect {
+
                 }
             }
         }

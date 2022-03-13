@@ -1,4 +1,4 @@
-package io.github.farhad.rbc.ui.account
+package io.github.farhad.rbc.ui.account.list
 
 import android.os.Bundle
 import android.view.LayoutInflater

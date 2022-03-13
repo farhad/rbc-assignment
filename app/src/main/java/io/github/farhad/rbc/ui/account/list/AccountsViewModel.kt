@@ -1,4 +1,4 @@
-package io.github.farhad.rbc.ui.account
+package io.github.farhad.rbc.ui.account.list
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

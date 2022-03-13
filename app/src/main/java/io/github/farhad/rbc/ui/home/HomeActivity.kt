@@ -5,9 +5,9 @@ import androidx.lifecycle.ViewModelProvider
 import dagger.android.support.DaggerAppCompatActivity
 import io.github.farhad.rbc.databinding.HomeActivityBinding
 import io.github.farhad.rbc.di.ViewModelFactory
-import io.github.farhad.rbc.ui.account.AccountsFragment
-import io.github.farhad.rbc.ui.account.AccountsViewModel
 import io.github.farhad.rbc.ui.account.detail.AccountDetailFragment
+import io.github.farhad.rbc.ui.account.list.AccountsFragment
+import io.github.farhad.rbc.ui.account.list.AccountsViewModel
 import io.github.farhad.rbc.ui.navigation.NavigationAction
 import io.github.farhad.rbc.ui.splash.SplashFragment
 import io.github.farhad.rbc.ui.splash.SplashViewModel

@@ -1,4 +1,4 @@
-package io.github.farhad.rbc.ui.account
+package io.github.farhad.rbc.ui.account.list
 
 sealed class AccountsViewState(
     val loadingVisible: Boolean,

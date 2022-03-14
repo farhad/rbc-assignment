@@ -7,9 +7,14 @@ import io.github.farhad.rbc.model.Result
 import kotlinx.coroutines.*
 import javax.inject.Inject
 
-class AccountRepository @Inject constructor(private val provider: AccountDataProvider) {
+interface AccountRepository {
+    suspend fun getAccountsAsync(): Deferred<Result<Account>>
+    suspend fun getTransactionsAsync(accountNumber: String, accountType: AccountType): Deferred<Result<Transaction>>
+}
 
-    suspend fun getAccountsAsync(): Deferred<Result<Account>> {
+class AccountRepositoryImpl @Inject constructor(private val provider: AccountDataProvider) : AccountRepository {
+
+    override suspend fun getAccountsAsync(): Deferred<Result<Account>> {
         return coroutineScope {
             return@coroutineScope async {
                 try {
@@ -22,7 +27,7 @@ class AccountRepository @Inject constructor(private val provider: AccountDataPro
         }
     }
 
-    suspend fun getTransactionsAsync(accountNumber: String, accountType: AccountType): Deferred<Result<Transaction>> {
+    override suspend fun getTransactionsAsync(accountNumber: String, accountType: AccountType): Deferred<Result<Transaction>> {
         return coroutineScope {
             return@coroutineScope async {
 

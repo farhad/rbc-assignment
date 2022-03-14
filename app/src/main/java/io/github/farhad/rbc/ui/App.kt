@@ -8,7 +8,7 @@ import io.github.farhad.rbc.di.AppComponent
 import io.github.farhad.rbc.di.DaggerAppComponent
 import javax.inject.Inject
 
-class App : Application(), HasAndroidInjector{
+class App : Application(), HasAndroidInjector {
 
     @Inject
     lateinit var androidInjector: DispatchingAndroidInjector<Any>
@@ -18,7 +18,7 @@ class App : Application(), HasAndroidInjector{
     lateinit var appComponent: AppComponent
         private set
 
-    protected fun createAppComponent(): AppComponent = DaggerAppComponent.builder().application(this).build()
+    private fun createAppComponent(): AppComponent = DaggerAppComponent.builder().application(this).build()
 
     override fun onCreate() {
         super.onCreate()

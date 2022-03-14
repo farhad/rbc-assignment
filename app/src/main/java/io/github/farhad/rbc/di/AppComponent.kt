@@ -5,8 +5,9 @@ import dagger.Component
 import dagger.android.AndroidInjectionModule
 import io.github.farhad.rbc.di.modules.*
 import io.github.farhad.rbc.ui.App
+import javax.inject.Singleton
 
-@AppScope
+@Singleton
 @Component(
     modules = [
         AndroidInjectionModule::class,

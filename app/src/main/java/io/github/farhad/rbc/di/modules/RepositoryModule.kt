@@ -4,13 +4,13 @@ import dagger.Module
 import dagger.Provides
 import io.github.farhad.rbc.data.AccountDataProvider
 import io.github.farhad.rbc.data.AccountRepository
-import io.github.farhad.rbc.di.AppScope
+import io.github.farhad.rbc.data.AccountRepositoryImpl
+import javax.inject.Singleton
 
 @Module
 class RepositoryModule {
 
-    @AppScope
+    @Singleton
     @Provides
-    fun provideAccountsRepository(accountDataProvider: AccountDataProvider) =
-        AccountRepository(accountDataProvider)
+    fun provideAccountsRepository(accountDataProvider: AccountDataProvider): AccountRepository = AccountRepositoryImpl(accountDataProvider)
 }

@@ -1,8 +1,8 @@
 package io.github.farhad.rbc.ui.util
 
+import android.icu.text.DateFormatSymbols
 import android.view.View
 import com.rbc.rbcaccountlibrary.AccountType
-import java.text.SimpleDateFormat
 import java.util.*
 
 fun AccountType.getFriendlyTitle(): String {
@@ -46,7 +46,8 @@ fun fromFriendlyTitle(friendlyTitle: String): AccountType {
 val daysArray = arrayOf("Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat")
 fun formatDate(calendar: Calendar): String {
     val dayName = daysArray[calendar.get(Calendar.DAY_OF_WEEK) - 1]
-    val date = Date(calendar.timeInMillis)
-    val formattedDate = SimpleDateFormat("MMM dd, yyyy", Locale.ROOT).format(date)
-    return "$dayName, $formattedDate"
+    val month = DateFormatSymbols().shortMonths[calendar[Calendar.MONTH]]
+    val day = calendar[Calendar.DAY_OF_MONTH]
+    val year = calendar[Calendar.YEAR]
+    return "$dayName, $day $month, $year"
 }

@@ -31,7 +31,7 @@ sealed class AccountDetailViewState(
     class EmptyResult : AccountDetailViewState(
         loadingVisible = false,
         listVisible = false,
-        errorVisible = false,
+        errorVisible = true,
         dataItems = listOf()
     )
 
@@ -46,7 +46,9 @@ sealed class AccountDetailViewState(
 sealed class AccountDetailsDataItem {
     data class Date(val formattedDate: String) : AccountDetailsDataItem()
     data class Transaction(val description: String, val amount: String, val currencySymbol: String) :
-        AccountDetailsDataItem()
+        AccountDetailsDataItem() {
+        val amountWithCurrencySymbol get() = "$amount $currencySymbol"
+    }
 }
 
 sealed class AccountInformationViewState {

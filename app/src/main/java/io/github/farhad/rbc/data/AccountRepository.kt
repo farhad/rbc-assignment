@@ -4,10 +4,7 @@ import com.rbc.rbcaccountlibrary.Account
 import com.rbc.rbcaccountlibrary.AccountType
 import com.rbc.rbcaccountlibrary.Transaction
 import io.github.farhad.rbc.model.Result
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.*
 import javax.inject.Inject
 
 class AccountRepository @Inject constructor(private val provider: AccountDataProvider) {
@@ -47,7 +44,9 @@ class AccountRepository @Inject constructor(private val provider: AccountDataPro
                     }
                 }
 
-                return@async Result.Success((accountJob.await() + creditCardJob.await()).sortedByDescending { it.date.timeInMillis })
+                val (accountTransactions, creditCardTransactions) = awaitAll(accountJob, creditCardJob)
+
+                return@async Result.Success(accountTransactions.plus(creditCardTransactions).sortedByDescending { it.date.timeInMillis })
             }
         }
     }

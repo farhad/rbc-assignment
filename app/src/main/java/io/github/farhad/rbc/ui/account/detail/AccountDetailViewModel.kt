@@ -22,17 +22,15 @@ class AccountDetailViewModel @Inject constructor(private val controller: Account
     val accountDetails: StateFlow<AccountDetailViewState> = _accountDetails
 
     fun setUp(name: String?, number: String?, balance: String?, typeName: String?) {
-        val accountName = name.stringOrEmpty()
         val accountType = fromFriendlyTitle(typeName.stringOrEmpty())
         val accountNumber = number.stringOrEmpty()
-        val accountBalance = balance.stringOrEmpty()
 
         viewModelScope.launch {
             _accountInformation.emit(
                 AccountInformationViewState.AccountInformation(
-                    accountName,
+                    name.stringOrEmpty(),
                     accountNumber,
-                    accountBalance,
+                    balance.stringOrEmpty(),
                     Currency.getInstance(Locale.CANADA).symbol
                 )
             )
@@ -41,12 +39,18 @@ class AccountDetailViewModel @Inject constructor(private val controller: Account
         viewModelScope.launch(Dispatchers.IO) {
             _accountDetails.emit(AccountDetailViewState.Loading())
 
-            controller.getTransactionsAsync(accountName, accountType)
+            controller.getTransactionsAsync(accountNumber, accountType)
                 .runCatching { this.await() }
                 .onSuccess {
                     when (it) {
                         is Result.Success -> {
-                            _accountDetails.emit(AccountDetailViewState.Result(it.data.mapToViewState()))
+                            val viewState = it.data.mapToViewState()
+                            if (viewState.isEmpty()) {
+                                _accountDetails.emit(AccountDetailViewState.EmptyResult())
+                            } else {
+                                _accountDetails.emit(AccountDetailViewState.Result(viewState))
+                            }
+
                         }
                         else -> {
                             _accountDetails.emit(AccountDetailViewState.Error())

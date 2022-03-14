@@ -189,7 +189,7 @@ class AccountDetailFragment : BaseFragment() {
             override fun bind(item: AccountDetailsDataItem) {
                 item as AccountDetailsDataItem.Transaction
                 binding.textviewDescription.text = item.description
-                binding.textviewAmount.text = "${item.amount} ${item.currencySymbol}"
+                binding.textviewAmount.text = item.amountWithCurrencySymbol
             }
         }
     }

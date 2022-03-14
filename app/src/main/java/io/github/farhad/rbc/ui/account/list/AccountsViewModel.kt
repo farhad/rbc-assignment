@@ -31,7 +31,12 @@ class AccountsViewModel @Inject constructor(private val controller: AccountContr
                 .onSuccess {
                     when (it) {
                         is Result.Success -> {
-                            _accountsViewState.emit(AccountsViewState.Result(items = it.data.mapToViewState()))
+                            val viewStates = it.data.mapToViewState()
+                            if (viewStates.isEmpty()) {
+                                _accountsViewState.emit(AccountsViewState.EmptyResult())
+                            } else {
+                                _accountsViewState.emit(AccountsViewState.Result(items = viewStates))
+                            }
                         }
 
                         else -> {

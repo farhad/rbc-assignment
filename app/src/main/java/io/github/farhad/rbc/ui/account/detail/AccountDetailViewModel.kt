@@ -3,6 +3,7 @@ package io.github.farhad.rbc.ui.account.detail
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.github.farhad.rbc.model.AccountDetailController
+import io.github.farhad.rbc.ui.util.formatDate
 import io.github.farhad.rbc.ui.util.fromFriendlyTitle
 import io.github.farhad.rbc.ui.util.isNotNullOrEmpty
 import io.github.farhad.rbc.ui.util.stringOrEmpty
@@ -15,7 +16,7 @@ import javax.inject.Inject
 
 class AccountDetailViewModel @Inject constructor(private val controller: AccountDetailController) : ViewModel() {
 
-    private var _accountInformation = MutableStateFlow<AccountInformationViewState>(AccountInformationViewState.Idle)
+    private var _accountInformation = MutableStateFlow<AccountInformationViewState>(AccountInformationViewState.Idle())
     val accountInformation: StateFlow<AccountInformationViewState> = _accountInformation
 
     private var _accountDetails = MutableStateFlow<AccountDetailViewState>(AccountDetailViewState.Idle())
@@ -34,25 +35,22 @@ class AccountDetailViewModel @Inject constructor(private val controller: Account
 
         if (validateSetUpParameters(accountName, accountNumber, accountBalance, accountTypeName)) {
             viewModelScope.launch(Dispatchers.IO) {
-                try {
-                    _accountInformation.emit(
-                        AccountInformationViewState.AccountInformation(
-                            accountName,
-                            accountNumber,
-                            accountBalance,
-                            accountTypeName
-                        )
+                _accountInformation.emit(
+                    AccountInformationViewState.AccountInformation(
+                        accountName,
+                        accountNumber,
+                        accountBalance,
+                        Currency.getInstance(Locale.CANADA).symbol
                     )
-
-                    _accountDetails.emit(AccountDetailViewState.Loading())
-
-                    // todo : formatting date and time
-                    // todo : grouping by day not the whole date and time
-                    val transactions = controller.getTransactionsAsync(accountNumber, fromFriendlyTitle(accountTypeName)).await()
-                    val map = transactions.groupBy { it.date }
+                )
+                _accountDetails.emit(AccountDetailViewState.Loading())
+                controller.getTransactionsAsync(accountNumber, fromFriendlyTitle(accountTypeName)).runCatching {
+                    this.await()
+                }.onSuccess { transactions ->
+                    val map = transactions.groupBy { formatDate(it.date as GregorianCalendar) }
                     val dataItems = mutableListOf<AccountDetailsDataItem>()
                     map.keys.forEach {
-                        dataItems.add(AccountDetailsDataItem.Date(it.time.toString()))
+                        dataItems.add(AccountDetailsDataItem.Date(it))
                         dataItems.addAll(map[it].orEmpty().map { trx ->
                             AccountDetailsDataItem.Transaction(
                                 description = trx.description,
@@ -60,10 +58,10 @@ class AccountDetailViewModel @Inject constructor(private val controller: Account
                                 currencySymbol = Currency.getInstance(Locale.CANADA).symbol
                             )
                         })
-                    }
 
-                    _accountDetails.emit(AccountDetailViewState.Result(dataItems))
-                } catch (e: Exception) {
+                        _accountDetails.emit(AccountDetailViewState.Result(dataItems))
+                    }
+                }.onFailure {
                     _accountDetails.emit(AccountDetailViewState.Error())
                 }
             }

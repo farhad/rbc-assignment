@@ -80,6 +80,15 @@ class AccountDetailFragment : BaseFragment() {
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.accountInformation.collect {
+                    binding.textviewNameAndNumber.text = "${it.name} (${it.number})"
+                    binding.textviewBalance.text = "${it.balance} ${it.currencySymbol}"
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
 
                 viewModel.accountDetails.collect {
                     binding.progressbar.changeVisibility(it.loadingVisible)
@@ -97,10 +106,6 @@ class AccountDetailFragment : BaseFragment() {
                         }
                     }
                 }
-
-                viewModel.accountInformation.collect {
-
-                }
             }
         }
 
@@ -111,6 +116,7 @@ class AccountDetailFragment : BaseFragment() {
         binding.recyclerview.apply {
             layoutManager = LinearLayoutManager(requireActivity(), RecyclerView.VERTICAL, false)
             addItemDecoration(DividerItemDecoration(requireActivity(), RecyclerView.VERTICAL))
+            isNestedScrollingEnabled = true
         }
         binding.recyclerview.adapter = adapter
     }

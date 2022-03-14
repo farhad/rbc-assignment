@@ -2,6 +2,7 @@ package io.github.farhad.rbc.ui.util
 
 import android.view.View
 import com.rbc.rbcaccountlibrary.AccountType
+import java.text.SimpleDateFormat
 import java.util.*
 
 fun AccountType.getFriendlyTitle(): String {
@@ -40,4 +41,12 @@ fun fromFriendlyTitle(friendlyTitle: String): AccountType {
     return if (friendlyTitle == AccountType.CREDIT_CARD.getFriendlyTitle())
         AccountType.CREDIT_CARD
     else AccountType.valueOf(friendlyTitle.uppercase(Locale.ROOT))
+}
+
+val daysArray = arrayOf("Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat")
+fun formatDate(calendar: Calendar): String {
+    val dayName = daysArray[calendar.get(Calendar.DAY_OF_WEEK) - 1]
+    val date = Date(calendar.timeInMillis)
+    val formattedDate = SimpleDateFormat("MMM dd, yyyy", Locale.ROOT).format(date)
+    return "$dayName, $formattedDate"
 }

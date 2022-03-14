@@ -16,7 +16,13 @@ interface AccountDataProvider {
 class AccountDataProviderImpl(private val provider: AccountProvider) : AccountDataProvider {
     override fun getAccounts(): List<Account> = provider.getAccountsList()
 
-    override fun getAccountTransactions(accountNumber: String): List<Transaction> = provider.getTransactions(accountNumber)
+    override fun getAccountTransactions(accountNumber: String): List<Transaction> {
+        return try {
+            provider.getTransactions(accountNumber)
+        } catch (e: Exception) {
+            listOf()
+        }
+    }
 
     override fun getAdditionalCreditCardTransactions(accountNumber: String): List<Transaction> =
         provider.getAdditionalCreditCardTransactions(accountNumber)

@@ -49,9 +49,19 @@ sealed class AccountDetailsDataItem {
         AccountDetailsDataItem()
 }
 
-sealed class AccountInformationViewState {
-    object Idle : AccountInformationViewState()
-    data class AccountInformation(val name: String, val number: String, val balance: String, val type: String) :
-        AccountInformationViewState()
+sealed class AccountInformationViewState(
+    open val name: String,
+    open val number: String,
+    open val balance: String,
+    open val currencySymbol: String
+) {
+    class Idle : AccountInformationViewState("", "", "", "")
+
+    data class AccountInformation(
+        override val name: String,
+        override val number: String,
+        override val balance: String,
+        override val currencySymbol: String
+    ) : AccountInformationViewState(name, number, balance, currencySymbol)
 }
 

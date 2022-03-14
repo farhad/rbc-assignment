@@ -51,5 +51,7 @@ sealed class AccountDataItem {
         val balance: String,
         val currencySymbol: String,
         val typeName: String
-    ) : AccountDataItem()
+    ) : AccountDataItem() {
+        val balanceWithCurrencySymbol get() = "$balance $currencySymbol"
+    }
 }

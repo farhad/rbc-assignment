@@ -175,7 +175,7 @@ class AccountsFragment : BaseFragment() {
 
                 binding.textviewName.text = item.name
                 binding.textviewNumber.text = item.number
-                binding.textviewBalance.text = "${item.balance} ${item.currencySymbol}"
+                binding.textviewBalance.text = item.balanceWithCurrencySymbol
                 binding.constraintLayout.setOnClickListener {
                     clickListener.invoke(item)
                 }

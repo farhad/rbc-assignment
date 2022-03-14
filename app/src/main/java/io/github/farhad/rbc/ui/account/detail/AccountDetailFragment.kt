@@ -16,7 +16,8 @@ import io.github.farhad.rbc.databinding.TransactionDateListItemBinding
 import io.github.farhad.rbc.databinding.TransactionItemListItemBinding
 import io.github.farhad.rbc.ui.util.BaseFragment
 import io.github.farhad.rbc.ui.util.changeVisibility
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 class AccountDetailFragment : BaseFragment() {
@@ -39,7 +40,6 @@ class AccountDetailFragment : BaseFragment() {
                     ACCOUNT_NUMBER to accountNumber,
                     ACCOUNT_BALANCE to accountBalance,
                     ACCOUNT_TYPE to accountTypeName
-
                 )
             }
         }
@@ -80,17 +80,20 @@ class AccountDetailFragment : BaseFragment() {
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.accountInformation.collect {
-                    binding.textviewNameAndNumber.text = "${it.name} (${it.number})"
-                    binding.textviewBalance.text = "${it.balance} ${it.currencySymbol}"
-                }
-            }
-        }
+                viewModel.accountInformation.onEach {
+                    when (it) {
+                        is AccountInformationViewState.AccountInformation -> {
+                            binding.textviewNameAndNumber.text = it.nameAndNumber
+                            binding.textviewBalance.text = it.balanceWithCurrencySymbol
+                        }
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                        else -> {
+                            //no op
+                        }
+                    }
+                }.launchIn(this)
 
-                viewModel.accountDetails.collect {
+                viewModel.accountDetails.onEach {
                     binding.progressbar.changeVisibility(it.loadingVisible)
                     binding.recyclerview.changeVisibility(it.listVisible)
                     binding.textviewError.changeVisibility(it.errorVisible)
@@ -105,10 +108,9 @@ class AccountDetailFragment : BaseFragment() {
                             binding.textviewError.text = getString(R.string.error_empty_list_transactions)
                         }
                     }
-                }
+                }.launchIn(this)
             }
         }
-
     }
 
     private fun setUpLayout() {

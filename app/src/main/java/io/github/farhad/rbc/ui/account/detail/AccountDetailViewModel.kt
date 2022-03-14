@@ -2,18 +2,24 @@ package io.github.farhad.rbc.ui.account.detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import io.github.farhad.rbc.di.modules.IoDispatcher
+import io.github.farhad.rbc.di.modules.MainDispatcher
 import io.github.farhad.rbc.model.AccountDetailController
 import io.github.farhad.rbc.model.Result
 import io.github.farhad.rbc.ui.util.fromFriendlyTitle
 import io.github.farhad.rbc.ui.util.stringOrEmpty
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
 
-class AccountDetailViewModel @Inject constructor(private val controller: AccountDetailController) : ViewModel() {
+class AccountDetailViewModel @Inject constructor(
+    private val controller: AccountDetailController,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+    @MainDispatcher private val mainDispatcher: CoroutineDispatcher
+) : ViewModel() {
 
     private var _accountInformation = MutableStateFlow<AccountInformationViewState>(AccountInformationViewState.Idle)
     val accountInformation: StateFlow<AccountInformationViewState> = _accountInformation
@@ -25,7 +31,7 @@ class AccountDetailViewModel @Inject constructor(private val controller: Account
         val accountType = fromFriendlyTitle(typeName.stringOrEmpty())
         val accountNumber = number.stringOrEmpty()
 
-        viewModelScope.launch {
+        viewModelScope.launch(mainDispatcher) {
             _accountInformation.emit(
                 AccountInformationViewState.AccountInformation(
                     name.stringOrEmpty(),
@@ -36,7 +42,7 @@ class AccountDetailViewModel @Inject constructor(private val controller: Account
             )
         }
 
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(ioDispatcher) {
             _accountDetails.emit(AccountDetailViewState.Loading())
 
             controller.getTransactionsAsync(accountNumber, accountType)

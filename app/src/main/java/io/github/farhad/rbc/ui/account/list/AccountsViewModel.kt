@@ -4,17 +4,20 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import io.github.farhad.rbc.di.modules.IoDispatcher
 import io.github.farhad.rbc.model.AccountController
 import io.github.farhad.rbc.model.Result
 import io.github.farhad.rbc.ui.navigation.NavigationAction
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class AccountsViewModel @Inject constructor(private val controller: AccountController) :
-    ViewModel() {
+class AccountsViewModel @Inject constructor(
+    private val controller: AccountController,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
+) : ViewModel() {
 
     private val _navigationAction = MutableLiveData<NavigationAction>()
     val navigationAction: LiveData<NavigationAction> = _navigationAction
@@ -23,7 +26,7 @@ class AccountsViewModel @Inject constructor(private val controller: AccountContr
     val accountsViewState: StateFlow<AccountsViewState> = _accountsViewState
 
     init {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(ioDispatcher) {
             _accountsViewState.emit(AccountsViewState.Loading())
 
             controller.getAccountsAsync()

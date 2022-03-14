@@ -10,7 +10,5 @@ interface AccountController {
 }
 
 class AccountControllerImpl @Inject constructor(private val repository: AccountRepository) : AccountController {
-    override suspend fun getAccountsAsync(): Deferred<Result<Account>> {
-        return repository.getAccountsAsync()
-    }
+    override suspend fun getAccountsAsync(): Deferred<Result<Account>> = repository.getAccountsAsync()
 }

@@ -16,7 +16,8 @@ import javax.inject.Singleton
         ControllerModule::class,
         ViewModelModule::class,
         DataProviderModule::class,
-        RepositoryModule::class]
+        RepositoryModule::class,
+        DispatcherModule::class]
 )
 interface AppComponent {
     @Component.Builder

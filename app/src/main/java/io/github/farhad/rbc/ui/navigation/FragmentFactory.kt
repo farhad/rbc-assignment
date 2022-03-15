@@ -15,9 +15,15 @@ object FragmentFactory {
 
     fun create(action: NavigationAction? = null): BaseFragment? {
         return when (action) {
-            null -> SplashFragment.newInstance().apply { navigationTag = TAG_SPLASH }
+            null -> SplashFragment.newInstance().apply {
+                navigationTag = TAG_SPLASH
+                entryPoint = true
+            }
 
-            is ShowAccounts -> AccountsFragment.newInstance().apply { navigationTag = TAG_ACCOUNTS }
+            is ShowAccounts -> AccountsFragment.newInstance().apply {
+                navigationTag = TAG_ACCOUNTS
+                entryPoint = true
+            }
 
             is ShowAccountDetails -> {
                 AccountDetailFragment.newInstance(
@@ -27,6 +33,7 @@ object FragmentFactory {
                     accountTypeName = action.accountTypeName
                 ).apply {
                     navigationTag = TAG_ACCOUNT_DETAILS
+                    entryPoint = false
                 }
             }
 

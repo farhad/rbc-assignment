@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModelProvider
 import dagger.android.support.DaggerAppCompatActivity
 import io.github.farhad.rbc.databinding.HomeActivityBinding
 import io.github.farhad.rbc.di.ViewModelFactory
-import io.github.farhad.rbc.ui.account.list.AccountsFragment
 import io.github.farhad.rbc.ui.account.list.AccountsViewModel
 import io.github.farhad.rbc.ui.navigation.FragmentFactory
 import io.github.farhad.rbc.ui.splash.SplashViewModel
@@ -57,9 +56,10 @@ class HomeActivity : DaggerAppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        when (supportFragmentManager.findFragmentById(binding.fragmentContainer.id)) {
-            is AccountsFragment -> finish()
-            else -> super.onBackPressed()
+        val fragment = supportFragmentManager.findFragmentById(binding.fragmentContainer.id) as BaseFragment
+        when {
+            fragment.entryPoint -> finish()
+            else -> supportFragmentManager.popBackStack()
         }
     }
 }

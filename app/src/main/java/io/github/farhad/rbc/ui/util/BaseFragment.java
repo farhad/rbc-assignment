@@ -12,6 +12,16 @@ import io.github.farhad.rbc.di.ViewModelFactory;
 
 public class BaseFragment extends Fragment {
 
+    protected String navigationTag;
+
+    public String getNavigationTag() {
+        return navigationTag;
+    }
+
+    public void setNavigationTag(String navigationTag) {
+        this.navigationTag = navigationTag;
+    }
+
     @Inject
     protected ViewModelFactory viewModelFactory;
 

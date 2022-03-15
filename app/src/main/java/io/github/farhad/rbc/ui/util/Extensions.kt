@@ -43,9 +43,8 @@ fun fromFriendlyTitle(friendlyTitle: String): AccountType {
     else AccountType.valueOf(friendlyTitle.uppercase(Locale.ROOT))
 }
 
-val daysArray = arrayOf("Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat")
 fun formatDate(calendar: Calendar): String {
-    val dayName = daysArray[calendar.get(Calendar.DAY_OF_WEEK) - 1]
+    val dayName = DateFormatSymbols.getInstance().shortWeekdays[calendar.get(Calendar.DAY_OF_WEEK)]
     val month = DateFormatSymbols.getInstance().shortMonths[calendar[Calendar.MONTH]]
     val day = calendar[Calendar.DAY_OF_MONTH]
     val year = calendar[Calendar.YEAR]

@@ -5,21 +5,14 @@ import androidx.lifecycle.ViewModelProvider
 import dagger.android.support.DaggerAppCompatActivity
 import io.github.farhad.rbc.databinding.HomeActivityBinding
 import io.github.farhad.rbc.di.ViewModelFactory
-import io.github.farhad.rbc.ui.account.detail.AccountDetailFragment
 import io.github.farhad.rbc.ui.account.list.AccountsFragment
 import io.github.farhad.rbc.ui.account.list.AccountsViewModel
-import io.github.farhad.rbc.ui.navigation.NavigationAction
-import io.github.farhad.rbc.ui.splash.SplashFragment
+import io.github.farhad.rbc.ui.navigation.FragmentFactory
 import io.github.farhad.rbc.ui.splash.SplashViewModel
+import io.github.farhad.rbc.ui.util.BaseFragment
 import javax.inject.Inject
 
 class HomeActivity : DaggerAppCompatActivity() {
-
-    companion object {
-        private const val TAG_SPLASH = "splash_fragment"
-        private const val TAG_ACCOUNTS = "accounts_fragment"
-        private const val TAG_ACCOUNT_DETAILS = "account_details"
-    }
 
     @Inject
     lateinit var viewModeFactory: ViewModelFactory
@@ -38,59 +31,29 @@ class HomeActivity : DaggerAppCompatActivity() {
         accountViewModel = ViewModelProvider(this, viewModeFactory)[AccountsViewModel::class.java]
 
         if (savedInstanceState == null) {
-            findAndReplaceFragment(TAG_SPLASH)
+            FragmentFactory.create()?.let { findAndReplaceFragment(it) }
         }
     }
 
     override fun onStart() {
         super.onStart()
 
-        splashViewModel.navigationAction.observe(this) {
-            processNavigationAction(it)
+        splashViewModel.navigationAction.observe(this) { action ->
+            FragmentFactory.create(action)?.let { findAndReplaceFragment(it) }
         }
 
-        accountViewModel.navigationAction.observe(this) {
-            processNavigationAction(it)
-        }
-    }
-
-    private fun processNavigationAction(action: NavigationAction) {
-        when (action) {
-            is NavigationAction.ShowAccounts -> {
-                findAndReplaceFragment(TAG_ACCOUNTS, action)
-            }
-
-            is NavigationAction.ShowAccountDetails -> {
-                findAndReplaceFragment(TAG_ACCOUNT_DETAILS, action)
-            }
+        accountViewModel.navigationAction.observe(this) { action ->
+            FragmentFactory.create(action)?.let { findAndReplaceFragment(it) }
         }
     }
 
-    private fun findAndReplaceFragment(tag: String, action: NavigationAction? = null) {
-        var fragment = supportFragmentManager.findFragmentByTag(tag)
-        if (fragment == null) {
-            fragment = when (tag) {
-                TAG_SPLASH -> SplashFragment.newInstance()
-                TAG_ACCOUNTS -> AccountsFragment.newInstance()
-                TAG_ACCOUNT_DETAILS -> {
-                    action as NavigationAction.ShowAccountDetails
-                    AccountDetailFragment.newInstance(
-                        accountName = action.accountName,
-                        accountNumber = action.accountNumber,
-                        accountBalance = action.accountBalance,
-                        accountTypeName = action.accountTypeName
-                    )
-                }
-                else -> null
-            }
-        }
-
-        fragment?.let {
-            supportFragmentManager.beginTransaction()
-                .replace(binding.fragmentContainer.id, it, tag)
-                .addToBackStack(tag)
-                .commit()
-        }
+    private fun findAndReplaceFragment(newFragment: BaseFragment) {
+        val fragment = supportFragmentManager.findFragmentByTag(newFragment.navigationTag) ?: newFragment
+        fragment as BaseFragment
+        supportFragmentManager.beginTransaction()
+            .replace(binding.fragmentContainer.id, fragment, fragment.navigationTag)
+            .addToBackStack(fragment.navigationTag)
+            .commit()
     }
 
     override fun onBackPressed() {

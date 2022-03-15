@@ -1,4 +1,4 @@
-package io.github.farhad.rbc.viewstate
+package io.github.farhad.rbc.mapper
 
 import com.rbc.rbcaccountlibrary.Transaction
 import io.github.farhad.rbc.TestUtils

@@ -45,7 +45,7 @@ class AccountDetailFragment : BaseFragment() {
         }
     }
 
-    private lateinit var viewModel: AccountDetailViewModel
+    private lateinit var viewModel: AccountDetailsViewModel
     private lateinit var adapter: TransactionsAdapter
 
     private var _binding: AccountDetailFragmentBinding? = null
@@ -53,7 +53,7 @@ class AccountDetailFragment : BaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(requireActivity(), viewModelFactory)[AccountDetailViewModel::class.java]
+        viewModel = ViewModelProvider(requireActivity(), viewModelFactory)[AccountDetailsViewModel::class.java]
     }
 
     override fun onCreateView(

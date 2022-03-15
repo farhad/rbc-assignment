@@ -27,13 +27,13 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/textview_error"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:text="Accounts"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:lines="2"
-        android:gravity="center_vertical"
+        android:gravity="center"
         android:textColor="@color/grey_900"
         android:textSize="14sp"
         android:visibility="gone"

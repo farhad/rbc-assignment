@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
 
-class AccountDetailViewModel @Inject constructor(
+class AccountDetailsViewModel @Inject constructor(
     private val controller: AccountDetailController,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     @MainDispatcher private val mainDispatcher: CoroutineDispatcher

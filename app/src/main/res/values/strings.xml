@@ -1,10 +1,10 @@
 <resources>
     <string name="app_name">RBC Accounts</string>
     <string name="title_accounts">Accounts Overview</string>
-    <string name="error_loading_accounts">There was an error in retrieving your account. Please try again.</string>
-    <string name="error_empty_list_accounts">no accounts to display at this time.</string>
+    <string name="error_loading_accounts">Failed to retrieve accounts. Please try again.</string>
+    <string name="error_empty_list_accounts">no accounts to display.</string>
 
     <string name="title_transactions">Transactions Overview</string>
-    <string name="error_loading_transactions">There was an error in retrieving your transactions. Please try again.</string>
-    <string name="error_empty_list_transactions">no transaction to display at this time.</string>
+    <string name="error_loading_transactions">Failed to retrieve transactions. Please try again.</string>
+    <string name="error_empty_list_transactions">no transaction to display.</string>
 </resources>

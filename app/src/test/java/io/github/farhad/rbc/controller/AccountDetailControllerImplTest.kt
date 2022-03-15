@@ -7,16 +7,25 @@ import io.github.farhad.rbc.TestUtils
 import io.github.farhad.rbc.data.AccountRepository
 import io.github.farhad.rbc.model.AccountDetailControllerImpl
 import io.github.farhad.rbc.model.Result
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
+import kotlinx.coroutines.test.TestCoroutineDispatcher
+import org.junit.After
 import org.junit.Assert
 import org.junit.Test
 import java.util.*
 
 class AccountDetailControllerImplTest {
 
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val testDispatcher = TestCoroutineDispatcher()
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @After
+    fun after() {
+        testDispatcher.cancelChildren()
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun when_repository_getTransactionsAsync_throws_exception_it_returns_failure_result() = runBlocking {
         // arrange
@@ -33,7 +42,7 @@ class AccountDetailControllerImplTest {
         }
 
         val mockedRepository = MockedRepository()
-        val controller = AccountDetailControllerImpl(mockedRepository)
+        val controller = AccountDetailControllerImpl(mockedRepository, testDispatcher)
 
         // act
         val result = controller.getTransactionsAsync(account.number, account.type).await()
@@ -42,6 +51,7 @@ class AccountDetailControllerImplTest {
         Assert.assertTrue(result is Result.Failure<Transaction>)
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun when_account_number_is_empty_or_null_it_returns_input_error_result() = runBlocking {
         // arrange
@@ -56,7 +66,7 @@ class AccountDetailControllerImplTest {
         }
 
         val mockedRepository = MockedRepository()
-        val controller = AccountDetailControllerImpl(mockedRepository)
+        val controller = AccountDetailControllerImpl(mockedRepository, testDispatcher)
 
         // act
         var result = controller.getTransactionsAsync("", AccountType.MORTGAGE).await()
@@ -71,6 +81,7 @@ class AccountDetailControllerImplTest {
         Assert.assertTrue(result is Result.InputError<Transaction>)
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun when_repository_getTransactionsAsync_returns_success_result_it_returns_success_result() = runBlocking {
         // arrange
@@ -89,7 +100,7 @@ class AccountDetailControllerImplTest {
         }
 
         val mockedRepository = MockedRepository()
-        val controller = AccountDetailControllerImpl(mockedRepository)
+        val controller = AccountDetailControllerImpl(mockedRepository, testDispatcher)
 
         // act
         val result = controller.getTransactionsAsync("1225", AccountType.CREDIT_CARD).await()

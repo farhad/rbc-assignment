@@ -17,5 +17,8 @@ class ControllerModule {
         AccountControllerImpl(repository, ioDispatcher)
 
     @Provides
-    fun provideAccountDetailController(repository: AccountRepository): AccountDetailController = AccountDetailControllerImpl(repository)
+    fun provideAccountDetailController(
+        repository: AccountRepository,
+        @IoDispatcher ioDispatcher: CoroutineDispatcher
+    ): AccountDetailController = AccountDetailControllerImpl(repository, ioDispatcher)
 }

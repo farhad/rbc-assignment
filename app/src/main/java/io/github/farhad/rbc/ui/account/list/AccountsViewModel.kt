@@ -28,7 +28,6 @@ class AccountsViewModel @Inject constructor(
     init {
         viewModelScope.launch(ioDispatcher) {
             _accountsViewState.emit(AccountsViewState.Loading())
-
             controller.getAccountsAsync()
                 .runCatching { this.await() }
                 .onSuccess {

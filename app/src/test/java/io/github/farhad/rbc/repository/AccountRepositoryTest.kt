@@ -1,4 +1,4 @@
-package io.github.farhad.rbc
+package io.github.farhad.rbc.repository
 
 import com.rbc.rbcaccountlibrary.Account
 import com.rbc.rbcaccountlibrary.AccountType

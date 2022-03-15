@@ -17,10 +17,14 @@ class AccountDetailControllerImpl @Inject constructor(private val repository: Ac
 
     override suspend fun getTransactionsAsync(accountNumber: String, accountType: AccountType): Deferred<Result<Transaction>> {
         return coroutineScope {
-            if (validateAccountNumber(accountNumber)) {
-                return@coroutineScope repository.getTransactionsAsync(accountNumber, accountType)
-            } else {
-                return@coroutineScope async { return@async Result.InputError<Transaction>() }
+            try {
+                if (validateAccountNumber(accountNumber)) {
+                    return@coroutineScope repository.getTransactionsAsync(accountNumber, accountType)
+                } else {
+                    return@coroutineScope async { return@async Result.InputError<Transaction>() }
+                }
+            } catch (e: Exception) {
+                return@coroutineScope async { Result.Failure<Transaction>() }
             }
         }
     }

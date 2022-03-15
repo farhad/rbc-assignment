@@ -4,7 +4,7 @@ import com.rbc.rbcaccountlibrary.Account
 import io.github.farhad.rbc.ui.util.getFriendlyTitle
 import java.util.*
 
-fun List<Account>.mapToViewState(): List<AccountDataItem> {
+fun List<Account>.mapToViewDataItems(): List<AccountDataItem> {
     val map = this.groupBy { it.type }
     val dataItems = mutableListOf<AccountDataItem>()
     map.keys.forEach { type ->

@@ -50,7 +50,7 @@ class AccountDetailViewModel @Inject constructor(
                 .onSuccess {
                     when (it) {
                         is Result.Success -> {
-                            val viewState = it.data.mapToViewState()
+                            val viewState = it.data.mapToViewDataItems()
                             if (viewState.isEmpty()) {
                                 _accountDetails.emit(AccountDetailViewState.EmptyResult())
                             } else {

@@ -5,8 +5,8 @@ import com.rbc.rbcaccountlibrary.AccountType
 import com.rbc.rbcaccountlibrary.Transaction
 import io.github.farhad.rbc.TestUtils
 import io.github.farhad.rbc.data.AccountRepository
-import io.github.farhad.rbc.model.AccountControllerImpl
 import io.github.farhad.rbc.model.Result
+import io.github.farhad.rbc.model.controller.AccountControllerImpl
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope

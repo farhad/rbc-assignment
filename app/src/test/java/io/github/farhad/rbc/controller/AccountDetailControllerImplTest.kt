@@ -5,8 +5,9 @@ import com.rbc.rbcaccountlibrary.AccountType
 import com.rbc.rbcaccountlibrary.Transaction
 import io.github.farhad.rbc.TestUtils
 import io.github.farhad.rbc.data.AccountRepository
-import io.github.farhad.rbc.model.AccountDetailControllerImpl
 import io.github.farhad.rbc.model.Result
+import io.github.farhad.rbc.model.controller.AccountDetailControllerImpl
+import io.github.farhad.rbc.model.validator.AccountDetailInputValidatorImpl
 import kotlinx.coroutines.*
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import org.junit.After
@@ -42,7 +43,7 @@ class AccountDetailControllerImplTest {
         }
 
         val mockedRepository = MockedRepository()
-        val controller = AccountDetailControllerImpl(mockedRepository)
+        val controller = AccountDetailControllerImpl(mockedRepository, AccountDetailInputValidatorImpl())
 
         // act
         val result = controller.getTransactionsAsync(account.number, account.type).await()
@@ -66,7 +67,7 @@ class AccountDetailControllerImplTest {
         }
 
         val mockedRepository = MockedRepository()
-        val controller = AccountDetailControllerImpl(mockedRepository)
+        val controller = AccountDetailControllerImpl(mockedRepository, AccountDetailInputValidatorImpl())
 
         // act
         var result = controller.getTransactionsAsync("", AccountType.MORTGAGE).await()
@@ -100,7 +101,7 @@ class AccountDetailControllerImplTest {
         }
 
         val mockedRepository = MockedRepository()
-        val controller = AccountDetailControllerImpl(mockedRepository)
+        val controller = AccountDetailControllerImpl(mockedRepository, AccountDetailInputValidatorImpl())
 
         // act
         val result = controller.getTransactionsAsync("1225", AccountType.CREDIT_CARD).await()

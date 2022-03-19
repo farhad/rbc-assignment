@@ -1,7 +1,8 @@
-package io.github.farhad.rbc.model
+package io.github.farhad.rbc.model.controller
 
 import com.rbc.rbcaccountlibrary.Account
 import io.github.farhad.rbc.data.AccountRepository
+import io.github.farhad.rbc.model.Result
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.coroutineScope
 import javax.inject.Inject

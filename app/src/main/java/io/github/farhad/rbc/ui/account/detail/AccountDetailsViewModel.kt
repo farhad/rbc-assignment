@@ -3,8 +3,8 @@ package io.github.farhad.rbc.ui.account.detail
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.github.farhad.rbc.di.modules.IoDispatcher
-import io.github.farhad.rbc.model.AccountDetailController
 import io.github.farhad.rbc.model.Result
+import io.github.farhad.rbc.model.controller.AccountDetailController
 import io.github.farhad.rbc.ui.util.fromFriendlyTitle
 import io.github.farhad.rbc.ui.util.stringOrEmpty
 import kotlinx.coroutines.CoroutineDispatcher

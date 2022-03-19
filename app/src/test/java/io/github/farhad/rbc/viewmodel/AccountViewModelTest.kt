@@ -4,8 +4,8 @@ import app.cash.turbine.test
 import com.rbc.rbcaccountlibrary.Account
 import com.rbc.rbcaccountlibrary.AccountType
 import io.github.farhad.rbc.TestUtils
-import io.github.farhad.rbc.model.AccountController
 import io.github.farhad.rbc.model.Result
+import io.github.farhad.rbc.model.controller.AccountController
 import io.github.farhad.rbc.ui.account.list.AccountDataItem
 import io.github.farhad.rbc.ui.account.list.AccountsViewModel
 import io.github.farhad.rbc.ui.account.list.AccountsViewState

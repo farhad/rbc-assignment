@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.github.farhad.rbc.di.modules.IoDispatcher
-import io.github.farhad.rbc.model.AccountController
 import io.github.farhad.rbc.model.Result
+import io.github.farhad.rbc.model.controller.AccountController
 import io.github.farhad.rbc.ui.navigation.NavigationAction
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow

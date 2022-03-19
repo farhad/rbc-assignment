@@ -12,6 +12,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class AccountsViewModel @Inject constructor(
@@ -26,14 +27,14 @@ class AccountsViewModel @Inject constructor(
     val accountsViewState: StateFlow<AccountsViewState> = _accountsViewState
 
     init {
-        viewModelScope.launch(ioDispatcher) {
+        viewModelScope.launch {
             _accountsViewState.emit(AccountsViewState.Loading())
             controller.getAccountsAsync()
                 .runCatching { this.await() }
                 .onSuccess {
                     when (it) {
                         is Result.Success -> {
-                            val viewStates = it.data.mapToViewDataItems()
+                            val viewStates = withContext(ioDispatcher) { it.data.mapToViewDataItems() }
                             if (viewStates.isEmpty()) {
                                 _accountsViewState.emit(AccountsViewState.EmptyResult())
                             } else {

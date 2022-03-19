@@ -42,7 +42,7 @@ class AccountDetailControllerImplTest {
         }
 
         val mockedRepository = MockedRepository()
-        val controller = AccountDetailControllerImpl(mockedRepository, testDispatcher)
+        val controller = AccountDetailControllerImpl(mockedRepository)
 
         // act
         val result = controller.getTransactionsAsync(account.number, account.type).await()
@@ -66,7 +66,7 @@ class AccountDetailControllerImplTest {
         }
 
         val mockedRepository = MockedRepository()
-        val controller = AccountDetailControllerImpl(mockedRepository, testDispatcher)
+        val controller = AccountDetailControllerImpl(mockedRepository)
 
         // act
         var result = controller.getTransactionsAsync("", AccountType.MORTGAGE).await()
@@ -100,7 +100,7 @@ class AccountDetailControllerImplTest {
         }
 
         val mockedRepository = MockedRepository()
-        val controller = AccountDetailControllerImpl(mockedRepository, testDispatcher)
+        val controller = AccountDetailControllerImpl(mockedRepository)
 
         // act
         val result = controller.getTransactionsAsync("1225", AccountType.CREDIT_CARD).await()

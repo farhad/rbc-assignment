@@ -7,24 +7,15 @@ import io.github.farhad.rbc.TestUtils
 import io.github.farhad.rbc.data.AccountRepository
 import io.github.farhad.rbc.model.AccountControllerImpl
 import io.github.farhad.rbc.model.Result
-import kotlinx.coroutines.*
-import kotlinx.coroutines.test.TestCoroutineDispatcher
-import org.junit.After
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert
 import org.junit.Test
 
 class AccountControllerImplTest {
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    val testDispatcher = TestCoroutineDispatcher()
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    @After
-    fun after() {
-        testDispatcher.cancelChildren()
-    }
-
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun when_repository_getAccountAsync_throws_exception_it_returns_failure_result() = runBlocking {
         // arrange
@@ -39,7 +30,7 @@ class AccountControllerImplTest {
         }
 
         val mockedRepository = MockedRepository()
-        val controller = AccountControllerImpl(mockedRepository, testDispatcher)
+        val controller = AccountControllerImpl(mockedRepository)
 
         // act
         val result = controller.getAccountsAsync().await()
@@ -48,7 +39,6 @@ class AccountControllerImplTest {
         Assert.assertTrue(result is Result.Failure<Account>)
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun when_repository_getAccountAsync_returns_success_it_returns_success_result() = runBlocking {
         // arrange
@@ -67,7 +57,7 @@ class AccountControllerImplTest {
         }
 
         val mockedRepository = MockedRepository()
-        val controller = AccountControllerImpl(mockedRepository, testDispatcher)
+        val controller = AccountControllerImpl(mockedRepository)
 
         // act
         val result = controller.getAccountsAsync().await()

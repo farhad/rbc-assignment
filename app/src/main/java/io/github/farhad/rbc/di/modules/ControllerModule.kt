@@ -7,18 +7,13 @@ import io.github.farhad.rbc.model.AccountController
 import io.github.farhad.rbc.model.AccountControllerImpl
 import io.github.farhad.rbc.model.AccountDetailController
 import io.github.farhad.rbc.model.AccountDetailControllerImpl
-import kotlinx.coroutines.CoroutineDispatcher
 
 @Module
 class ControllerModule {
 
     @Provides
-    fun provideAccountController(repository: AccountRepository, @IoDispatcher ioDispatcher: CoroutineDispatcher): AccountController =
-        AccountControllerImpl(repository, ioDispatcher)
+    fun provideAccountController(repository: AccountRepository): AccountController = AccountControllerImpl(repository)
 
     @Provides
-    fun provideAccountDetailController(
-        repository: AccountRepository,
-        @IoDispatcher ioDispatcher: CoroutineDispatcher
-    ): AccountDetailController = AccountDetailControllerImpl(repository, ioDispatcher)
+    fun provideAccountDetailController(repository: AccountRepository): AccountDetailController = AccountDetailControllerImpl(repository)
 }

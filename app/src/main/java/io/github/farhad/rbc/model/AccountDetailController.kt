@@ -3,35 +3,28 @@ package io.github.farhad.rbc.model
 import com.rbc.rbcaccountlibrary.AccountType
 import com.rbc.rbcaccountlibrary.Transaction
 import io.github.farhad.rbc.data.AccountRepository
-import io.github.farhad.rbc.di.modules.IoDispatcher
 import io.github.farhad.rbc.ui.util.isNotNullOrEmpty
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import javax.inject.Inject
 
 interface AccountDetailController {
     suspend fun getTransactionsAsync(accountNumber: String, accountType: AccountType): Deferred<Result<Transaction>>
 }
 
-class AccountDetailControllerImpl @Inject constructor(
-    private val repository: AccountRepository,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
-) : AccountDetailController {
+// todo : validator should be injected, also do some research
+class AccountDetailControllerImpl @Inject constructor(private val repository: AccountRepository) : AccountDetailController {
 
     override suspend fun getTransactionsAsync(accountNumber: String, accountType: AccountType): Deferred<Result<Transaction>> {
         return coroutineScope {
-            try {
-                if (validateAccountNumber(accountNumber)) {
-                    withContext(ioDispatcher) {
-                        return@withContext repository.getTransactionsAsync(accountNumber, accountType)
-                    }
-                } else {
-                    return@coroutineScope async { return@async Result.InputError<Transaction>() }
-                }
-            } catch (e: Exception) {
-                return@coroutineScope async { Result.Failure<Transaction>() }
+            if (validateAccountNumber(accountNumber)) {
+                return@coroutineScope repository.getTransactionsAsync(accountNumber, accountType)
+            } else {
+                return@coroutineScope async { return@async Result.InputError<Transaction>() }
             }
         }
     }
 
-    private fun validateAccountNumber(number: String?): Boolean = number.isNotNullOrEmpty()
+    private fun validateAccountNumber(number: String?) = number.isNotNullOrEmpty()
 }

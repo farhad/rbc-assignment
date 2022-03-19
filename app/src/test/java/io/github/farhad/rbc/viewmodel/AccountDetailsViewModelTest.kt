@@ -52,7 +52,7 @@ class AccountDetailsViewModelTest {
 
         // act
         val controller = MockedController()
-        val viewModel = AccountDetailsViewModel(controller, testDispatcher, testDispatcher)
+        val viewModel = AccountDetailsViewModel(controller, testDispatcher)
         viewModel.setUp(account.name, account.number, account.balance, account.type.getFriendlyTitle())
 
         // assert
@@ -89,7 +89,7 @@ class AccountDetailsViewModelTest {
 
         // act
         val controller = MockedController()
-        val viewModel = AccountDetailsViewModel(controller, testDispatcher, testDispatcher)
+        val viewModel = AccountDetailsViewModel(controller, testDispatcher)
         viewModel.setUp(account.name, account.number, account.balance, account.type.getFriendlyTitle())
 
         // assert
@@ -126,7 +126,7 @@ class AccountDetailsViewModelTest {
 
         // act
         val controller = MockedController()
-        val viewModel = AccountDetailsViewModel(controller, testDispatcher, testDispatcher)
+        val viewModel = AccountDetailsViewModel(controller, testDispatcher)
         viewModel.setUp(account.name, account.number, account.balance, account.type.getFriendlyTitle())
 
         // assert
@@ -166,7 +166,7 @@ class AccountDetailsViewModelTest {
 
         // act
         val controller = MockedController()
-        val viewModel = AccountDetailsViewModel(controller, testDispatcher, testDispatcher)
+        val viewModel = AccountDetailsViewModel(controller, testDispatcher)
         viewModel.setUp(account.name, account.number, account.balance, account.type.getFriendlyTitle())
 
         // assert

@@ -8,13 +8,27 @@ import io.github.farhad.rbc.TestUtils.newTransaction
 import io.github.farhad.rbc.data.AccountDataProvider
 import io.github.farhad.rbc.data.AccountRepositoryImpl
 import io.github.farhad.rbc.model.Result
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.TestCoroutineDispatcher
+import org.junit.After
 import org.junit.Assert
 import org.junit.Test
 import java.util.*
 
 class AccountRepositoryTest {
 
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val testDispatcher = TestCoroutineDispatcher()
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @After
+    fun after() {
+        testDispatcher.cancelChildren()
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun when_provider_getAccountAsync_throws_exception_it_returns_failure_result() = runBlocking {
         // arrange
@@ -33,7 +47,7 @@ class AccountRepositoryTest {
         }
 
         val mockedProvider = MockedAccountDataProvider()
-        val repository = AccountRepositoryImpl(mockedProvider)
+        val repository = AccountRepositoryImpl(mockedProvider, testDispatcher)
 
         // act
         val result = repository.getAccountsAsync().await()
@@ -42,6 +56,7 @@ class AccountRepositoryTest {
         Assert.assertTrue(result is Result.Failure<Account>)
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun when_provider_getAccountAsync_returns_list_it_returns_success_result_with_that_list() = runBlocking {
         // arrange
@@ -62,7 +77,7 @@ class AccountRepositoryTest {
         }
 
         val mockedProvider = MockedAccountDataProvider()
-        val repository = AccountRepositoryImpl(mockedProvider)
+        val repository = AccountRepositoryImpl(mockedProvider, testDispatcher)
 
         // act
         val result = repository.getAccountsAsync().await()
@@ -75,6 +90,7 @@ class AccountRepositoryTest {
         Assert.assertTrue(result.data[0] == account)
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun when_providers_either_getTransaction_methods_succeeds_it_returns_success_result_with_that_list() = runBlocking {
         // arrange
@@ -96,7 +112,7 @@ class AccountRepositoryTest {
         }
 
         val mockedProvider = MockedAccountDataProvider()
-        val repository = AccountRepositoryImpl(mockedProvider)
+        val repository = AccountRepositoryImpl(mockedProvider, testDispatcher)
 
         // act
         val result = repository.getTransactionsAsync(account.number, account.type).await()
@@ -109,6 +125,7 @@ class AccountRepositoryTest {
         Assert.assertTrue(result.data[0] == transaction)
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun when_account_type_is_not_credit_card_it_does_not_call_provider_getAdditionalCreditCardTransactions() = runBlocking {
         // arrange
@@ -130,7 +147,7 @@ class AccountRepositoryTest {
         }
 
         val mockedProvider = MockedAccountDataProvider()
-        val repository = AccountRepositoryImpl(mockedProvider)
+        val repository = AccountRepositoryImpl(mockedProvider, testDispatcher)
 
         // act
         val result = repository.getTransactionsAsync(account.number, account.type).await()
@@ -143,6 +160,7 @@ class AccountRepositoryTest {
         Assert.assertTrue(result.data[0] == transaction)
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun when_account_type_is_credit_card_it_calls_both_provider_getTransaction_methods() = runBlocking {
         // arrange
@@ -171,7 +189,7 @@ class AccountRepositoryTest {
         }
 
         val mockedProvider = MockedAccountDataProvider()
-        val repository = AccountRepositoryImpl(mockedProvider)
+        val repository = AccountRepositoryImpl(mockedProvider, testDispatcher)
 
         // act
         val result = repository.getTransactionsAsync(account.number, account.type).await()
@@ -185,6 +203,7 @@ class AccountRepositoryTest {
         Assert.assertTrue(result.data[1] == transactionOne)
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun it_sorts_transactions_from_provider_getTransactions_combined_result_descending_by_date() = runBlocking {
         // arrange
@@ -213,7 +232,7 @@ class AccountRepositoryTest {
         }
 
         val mockedProvider = MockedAccountDataProvider()
-        val repository = AccountRepositoryImpl(mockedProvider)
+        val repository = AccountRepositoryImpl(mockedProvider, testDispatcher)
 
         // act
         val result = repository.getTransactionsAsync(account.number, account.type).await()

@@ -3,7 +3,6 @@ package io.github.farhad.rbc.ui.account.detail
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.github.farhad.rbc.di.modules.IoDispatcher
-import io.github.farhad.rbc.di.modules.MainDispatcher
 import io.github.farhad.rbc.model.AccountDetailController
 import io.github.farhad.rbc.model.Result
 import io.github.farhad.rbc.ui.util.fromFriendlyTitle
@@ -12,13 +11,13 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.*
 import javax.inject.Inject
 
 class AccountDetailsViewModel @Inject constructor(
     private val controller: AccountDetailController,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
-    @MainDispatcher private val mainDispatcher: CoroutineDispatcher
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
     private var _accountInformation = MutableStateFlow<AccountInformationViewState>(AccountInformationViewState.Idle)
@@ -31,7 +30,7 @@ class AccountDetailsViewModel @Inject constructor(
         val accountType = fromFriendlyTitle(typeName.stringOrEmpty())
         val accountNumber = number.stringOrEmpty()
 
-        viewModelScope.launch(mainDispatcher) {
+        viewModelScope.launch {
             _accountInformation.emit(
                 AccountInformationViewState.AccountInformation(
                     name.stringOrEmpty(),
@@ -42,7 +41,7 @@ class AccountDetailsViewModel @Inject constructor(
             )
         }
 
-        viewModelScope.launch(ioDispatcher) {
+        viewModelScope.launch {
             _accountDetails.emit(AccountDetailViewState.Loading())
 
             controller.getTransactionsAsync(accountNumber, accountType)
@@ -50,13 +49,12 @@ class AccountDetailsViewModel @Inject constructor(
                 .onSuccess {
                     when (it) {
                         is Result.Success -> {
-                            val viewState = it.data.mapToViewDataItems()
+                            val viewState = withContext(ioDispatcher) { it.data.mapToViewDataItems() }
                             if (viewState.isEmpty()) {
                                 _accountDetails.emit(AccountDetailViewState.EmptyResult())
                             } else {
                                 _accountDetails.emit(AccountDetailViewState.Result(viewState))
                             }
-
                         }
                         else -> {
                             _accountDetails.emit(AccountDetailViewState.Error())

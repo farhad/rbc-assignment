@@ -14,8 +14,10 @@ import io.github.farhad.rbc.ui.util.formatDate
 import io.github.farhad.rbc.ui.util.getFriendlyTitle
 import kotlinx.coroutines.*
 import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert
+import org.junit.Before
 import org.junit.Test
 import java.util.*
 
@@ -23,6 +25,12 @@ class AccountDetailsViewModelTest {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val testDispatcher = TestCoroutineDispatcher()
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Before
+    fun before() {
+        Dispatchers.setMain(testDispatcher)
+    }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @After
@@ -40,7 +48,7 @@ class AccountDetailsViewModelTest {
             override suspend fun getTransactionsAsync(accountNumber: String, accountType: AccountType): Deferred<Result<Transaction>> {
                 return coroutineScope {
                     try {
-                        withContext(Dispatchers.IO) {
+                        withContext(this.coroutineContext) {
                             return@withContext async { throw IllegalStateException() }
                         }
                     } catch (e: Exception) {
@@ -77,7 +85,7 @@ class AccountDetailsViewModelTest {
             override suspend fun getTransactionsAsync(accountNumber: String, accountType: AccountType): Deferred<Result<Transaction>> {
                 return coroutineScope {
                     try {
-                        withContext(Dispatchers.IO) {
+                        withContext(this.coroutineContext) {
                             return@withContext async { throw IllegalStateException() }
                         }
                     } catch (e: Exception) {
@@ -114,7 +122,7 @@ class AccountDetailsViewModelTest {
             override suspend fun getTransactionsAsync(accountNumber: String, accountType: AccountType): Deferred<Result<Transaction>> {
                 return coroutineScope {
                     try {
-                        withContext(Dispatchers.IO) {
+                        withContext(this.coroutineContext) {
                             return@withContext async { return@async Result.Success(listOf<Transaction>()) }
                         }
                     } catch (e: Exception) {
@@ -154,7 +162,7 @@ class AccountDetailsViewModelTest {
             override suspend fun getTransactionsAsync(accountNumber: String, accountType: AccountType): Deferred<Result<Transaction>> {
                 return coroutineScope {
                     try {
-                        withContext(Dispatchers.IO) {
+                        withContext(this.coroutineContext) {
                             return@withContext async { return@async Result.Success(listOf(transaction)) }
                         }
                     } catch (e: Exception) {

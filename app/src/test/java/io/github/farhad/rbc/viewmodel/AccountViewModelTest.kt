@@ -12,14 +12,22 @@ import io.github.farhad.rbc.ui.account.list.AccountsViewState
 import io.github.farhad.rbc.ui.util.getFriendlyTitle
 import kotlinx.coroutines.*
 import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert
+import org.junit.Before
 import org.junit.Test
 
 class AccountViewModelTest {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val testDispatcher = TestCoroutineDispatcher()
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Before
+    fun before() {
+        Dispatchers.setMain(testDispatcher)
+    }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @After
@@ -35,9 +43,7 @@ class AccountViewModelTest {
             override suspend fun getAccountsAsync(): Deferred<Result<Account>> {
                 return coroutineScope {
                     try {
-                        withContext(testDispatcher) {
-                            return@withContext async { throw IllegalStateException() }
-                        }
+                        withContext(this.coroutineContext) { throw IllegalStateException() }
                     } catch (e: Exception) {
                         return@coroutineScope async { Result.Failure<Account>() }
                     }
@@ -68,7 +74,7 @@ class AccountViewModelTest {
             override suspend fun getAccountsAsync(): Deferred<Result<Account>> {
                 return coroutineScope {
                     try {
-                        withContext(testDispatcher) {
+                        withContext(this.coroutineContext) {
                             return@withContext async { return@async Result.Success<Account>(listOf()) }
                         }
                     } catch (e: Exception) {
@@ -103,7 +109,7 @@ class AccountViewModelTest {
             override suspend fun getAccountsAsync(): Deferred<Result<Account>> {
                 return coroutineScope {
                     try {
-                        withContext(testDispatcher) {
+                        withContext(this.coroutineContext) {
                             return@withContext async { return@async Result.Success(listOf(account)) }
                         }
                     } catch (e: Exception) {

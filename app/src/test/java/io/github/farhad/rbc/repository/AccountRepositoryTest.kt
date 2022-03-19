@@ -8,12 +8,15 @@ import io.github.farhad.rbc.TestUtils.newTransaction
 import io.github.farhad.rbc.data.AccountDataProvider
 import io.github.farhad.rbc.data.AccountRepositoryImpl
 import io.github.farhad.rbc.model.Result
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert
+import org.junit.Before
 import org.junit.Test
 import java.util.*
 
@@ -21,6 +24,12 @@ class AccountRepositoryTest {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val testDispatcher = TestCoroutineDispatcher()
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Before
+    fun before() {
+        Dispatchers.setMain(testDispatcher)
+    }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @After
@@ -38,11 +47,11 @@ class AccountRepositoryTest {
             }
 
             override suspend fun getAccountTransactions(accountNumber: String): List<Transaction> {
-                TODO("Not yet implemented")
+                return listOf()
             }
 
             override suspend fun getAdditionalCreditCardTransactions(accountNumber: String): List<Transaction> {
-                TODO("Not yet implemented")
+                return listOf()
             }
         }
 
@@ -68,11 +77,11 @@ class AccountRepositoryTest {
             }
 
             override suspend fun getAccountTransactions(accountNumber: String): List<Transaction> {
-                TODO("Not yet implemented")
+                return listOf()
             }
 
             override suspend fun getAdditionalCreditCardTransactions(accountNumber: String): List<Transaction> {
-                TODO("Not yet implemented")
+                return listOf()
             }
         }
 

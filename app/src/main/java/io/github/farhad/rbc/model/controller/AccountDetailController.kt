@@ -22,9 +22,13 @@ class AccountDetailControllerImpl @Inject constructor(
 
     override suspend fun getTransactionsAsync(accountNumber: String, accountType: AccountType): Deferred<Result<Transaction>> {
         return coroutineScope {
-            when (validator.validate(accountNumber)) {
-                AccountValidationResult.SUCCESS -> return@coroutineScope repository.getTransactionsAsync(accountNumber, accountType)
-                AccountValidationResult.ACCOUNT_NUMBER_EMPTY -> return@coroutineScope async { return@async Result.InputError<Transaction>() }
+            try {
+                when (validator.validate(accountNumber)) {
+                    AccountValidationResult.SUCCESS -> return@coroutineScope repository.getTransactionsAsync(accountNumber, accountType)
+                    AccountValidationResult.ACCOUNT_NUMBER_EMPTY -> return@coroutineScope async { return@async Result.InputError<Transaction>() }
+                }
+            } catch (e: Exception) {
+                return@coroutineScope async { return@async Result.Failure<Transaction>() }
             }
         }
     }

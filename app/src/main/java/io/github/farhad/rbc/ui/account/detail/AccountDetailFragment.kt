@@ -14,6 +14,7 @@ import io.github.farhad.rbc.R
 import io.github.farhad.rbc.databinding.AccountDetailFragmentBinding
 import io.github.farhad.rbc.databinding.TransactionDateListItemBinding
 import io.github.farhad.rbc.databinding.TransactionItemListItemBinding
+import io.github.farhad.rbc.ui.account.list.AccountDataItem
 import io.github.farhad.rbc.ui.util.BaseFragment
 import io.github.farhad.rbc.ui.util.changeVisibility
 import kotlinx.coroutines.flow.launchIn
@@ -23,24 +24,11 @@ import kotlinx.coroutines.launch
 class AccountDetailFragment : BaseFragment() {
 
     companion object {
-        private const val ACCOUNT_NAME = "account_name"
-        private const val ACCOUNT_NUMBER = "account_number"
-        private const val ACCOUNT_BALANCE = "account_balance"
-        private const val ACCOUNT_TYPE = "account_type"
+        private const val ACCOUNT_DATA_ITEM = "account_data_item"
 
-        fun newInstance(
-            accountName: String,
-            accountNumber: String,
-            accountBalance: String,
-            accountTypeName: String
-        ): AccountDetailFragment {
+        fun newInstance(accountDataItem: AccountDataItem.Item): AccountDetailFragment {
             return AccountDetailFragment().apply {
-                arguments = bundleOf(
-                    ACCOUNT_NAME to accountName,
-                    ACCOUNT_NUMBER to accountNumber,
-                    ACCOUNT_BALANCE to accountBalance,
-                    ACCOUNT_TYPE to accountTypeName
-                )
+                arguments = bundleOf(ACCOUNT_DATA_ITEM to accountDataItem)
             }
         }
     }
@@ -56,11 +44,7 @@ class AccountDetailFragment : BaseFragment() {
         viewModel = ViewModelProvider(requireActivity(), viewModelFactory)[AccountDetailsViewModel::class.java]
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = AccountDetailFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -69,14 +53,7 @@ class AccountDetailFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         setUpLayout()
 
-        if (arguments != null) {
-            viewModel.setUp(
-                name = arguments?.getString(ACCOUNT_NAME),
-                number = arguments?.getString(ACCOUNT_NUMBER),
-                balance = arguments?.getString(ACCOUNT_BALANCE),
-                typeName = arguments?.getString(ACCOUNT_TYPE)
-            )
-        }
+        arguments?.getSerializable(ACCOUNT_DATA_ITEM)?.let { viewModel.setUp(it as AccountDataItem.Item) }
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -107,6 +84,9 @@ class AccountDetailFragment : BaseFragment() {
                         is AccountDetailViewState.EmptyResult -> {
                             binding.textviewError.text = getString(R.string.error_empty_list_transactions)
                         }
+                        else -> {
+                            // no op
+                        }
                     }
                 }.launchIn(this)
             }
@@ -128,8 +108,19 @@ class AccountDetailFragment : BaseFragment() {
         _binding = null
     }
 
-    class TransactionsAdapter() :
-        ListAdapter<AccountDetailsDataItem, TransactionsAdapter.TransactionViewHolder>(AccountDetailsDataItemDiffUtil()) {
+    class TransactionsAdapter : ListAdapter<AccountDetailsDataItem, TransactionsAdapter.TransactionViewHolder>(TransactionDiffUtil) {
+
+        companion object {
+            private object TransactionDiffUtil : DiffUtil.ItemCallback<AccountDetailsDataItem>() {
+                override fun areContentsTheSame(oldItem: AccountDetailsDataItem, newItem: AccountDetailsDataItem): Boolean {
+                    return oldItem == newItem
+                }
+
+                override fun areItemsTheSame(oldItem: AccountDetailsDataItem, newItem: AccountDetailsDataItem): Boolean {
+                    return oldItem == newItem
+                }
+            }
+        }
 
         enum class ViewType {
             DATE,
@@ -139,16 +130,6 @@ class AccountDetailFragment : BaseFragment() {
                 fun from(value: Int): ViewType {
                     return if (value == DATE.ordinal) DATE else TRANSACTION
                 }
-            }
-        }
-
-        class AccountDetailsDataItemDiffUtil : DiffUtil.ItemCallback<AccountDetailsDataItem>() {
-            override fun areContentsTheSame(oldItem: AccountDetailsDataItem, newItem: AccountDetailsDataItem): Boolean {
-                return oldItem == newItem
-            }
-
-            override fun areItemsTheSame(oldItem: AccountDetailsDataItem, newItem: AccountDetailsDataItem): Boolean {
-                return oldItem == newItem
             }
         }
 

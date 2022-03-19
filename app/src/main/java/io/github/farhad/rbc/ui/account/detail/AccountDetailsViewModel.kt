@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import io.github.farhad.rbc.di.modules.IoDispatcher
 import io.github.farhad.rbc.model.Result
 import io.github.farhad.rbc.model.controller.AccountDetailController
+import io.github.farhad.rbc.ui.account.list.AccountDataItem
 import io.github.farhad.rbc.ui.util.fromFriendlyTitle
 import io.github.farhad.rbc.ui.util.stringOrEmpty
 import kotlinx.coroutines.CoroutineDispatcher
@@ -12,7 +13,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.*
 import javax.inject.Inject
 
 class AccountDetailsViewModel @Inject constructor(
@@ -26,17 +26,16 @@ class AccountDetailsViewModel @Inject constructor(
     private var _accountDetails = MutableStateFlow<AccountDetailViewState>(AccountDetailViewState.Idle())
     val accountDetails: StateFlow<AccountDetailViewState> = _accountDetails
 
-    fun setUp(name: String?, number: String?, balance: String?, typeName: String?) {
-        val accountType = fromFriendlyTitle(typeName.stringOrEmpty())
-        val accountNumber = number.stringOrEmpty()
+    fun setUp(accountDataItem: AccountDataItem.Item) {
+        val accountType = fromFriendlyTitle(accountDataItem.typeName.stringOrEmpty())
 
         viewModelScope.launch {
             _accountInformation.emit(
                 AccountInformationViewState.AccountInformation(
-                    name.stringOrEmpty(),
-                    accountNumber,
-                    balance.stringOrEmpty(),
-                    Currency.getInstance(Locale.CANADA).symbol
+                    accountDataItem.name,
+                    accountDataItem.number,
+                    accountDataItem.balance,
+                    accountDataItem.currencySymbol
                 )
             )
         }
@@ -44,7 +43,7 @@ class AccountDetailsViewModel @Inject constructor(
         viewModelScope.launch {
             _accountDetails.emit(AccountDetailViewState.Loading())
 
-            controller.getTransactionsAsync(accountNumber, accountType)
+            controller.getTransactionsAsync(accountDataItem.number, accountType)
                 .runCatching { this.await() }
                 .onSuccess {
                     when (it) {

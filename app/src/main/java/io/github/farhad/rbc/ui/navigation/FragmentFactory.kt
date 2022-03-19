@@ -26,12 +26,7 @@ object FragmentFactory {
             }
 
             is ShowAccountDetails -> {
-                AccountDetailFragment.newInstance(
-                    accountName = action.accountName,
-                    accountNumber = action.accountNumber,
-                    accountBalance = action.accountBalance,
-                    accountTypeName = action.accountTypeName
-                ).apply {
+                AccountDetailFragment.newInstance(action.accountDataItem).apply {
                     navigationTag = TAG_ACCOUNT_DETAILS
                     entryPoint = false
                 }

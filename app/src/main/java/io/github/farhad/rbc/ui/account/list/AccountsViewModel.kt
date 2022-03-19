@@ -53,8 +53,7 @@ class AccountsViewModel @Inject constructor(
 
     fun onAccountsSelected(item: AccountDataItem) {
         item as AccountDataItem.Item
-
-        _navigationAction.value = NavigationAction.ShowAccountDetails(item.name, item.number, item.balance, item.typeName)
+        _navigationAction.value = NavigationAction.ShowAccountDetails(item)
     }
 
 }

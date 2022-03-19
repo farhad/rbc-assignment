@@ -4,6 +4,7 @@ import app.cash.turbine.test
 import com.rbc.rbcaccountlibrary.AccountType
 import com.rbc.rbcaccountlibrary.Transaction
 import io.github.farhad.rbc.TestUtils
+import io.github.farhad.rbc.TestUtils.toAccountDataItem
 import io.github.farhad.rbc.model.Result
 import io.github.farhad.rbc.model.controller.AccountDetailController
 import io.github.farhad.rbc.ui.account.detail.AccountDetailViewState
@@ -11,7 +12,6 @@ import io.github.farhad.rbc.ui.account.detail.AccountDetailsDataItem
 import io.github.farhad.rbc.ui.account.detail.AccountDetailsViewModel
 import io.github.farhad.rbc.ui.account.detail.AccountInformationViewState
 import io.github.farhad.rbc.ui.util.formatDate
-import io.github.farhad.rbc.ui.util.getFriendlyTitle
 import kotlinx.coroutines.*
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.runTest
@@ -62,7 +62,7 @@ class AccountDetailsViewModelTest {
         // act
         val controller = MockedController()
         val viewModel = AccountDetailsViewModel(controller, testDispatcher)
-        viewModel.setUp(account.name, account.number, account.balance, account.type.getFriendlyTitle())
+        viewModel.setUp(account.toAccountDataItem())
 
         // assert
 
@@ -99,7 +99,7 @@ class AccountDetailsViewModelTest {
         // act
         val controller = MockedController()
         val viewModel = AccountDetailsViewModel(controller, testDispatcher)
-        viewModel.setUp(account.name, account.number, account.balance, account.type.getFriendlyTitle())
+        viewModel.setUp(account.toAccountDataItem())
 
         // assert
         viewModel.accountDetails.test {
@@ -136,7 +136,7 @@ class AccountDetailsViewModelTest {
         // act
         val controller = MockedController()
         val viewModel = AccountDetailsViewModel(controller, testDispatcher)
-        viewModel.setUp(account.name, account.number, account.balance, account.type.getFriendlyTitle())
+        viewModel.setUp(account.toAccountDataItem())
 
         // assert
         viewModel.accountDetails.test {
@@ -176,7 +176,7 @@ class AccountDetailsViewModelTest {
         // act
         val controller = MockedController()
         val viewModel = AccountDetailsViewModel(controller, testDispatcher)
-        viewModel.setUp(account.name, account.number, account.balance, account.type.getFriendlyTitle())
+        viewModel.setUp(account.toAccountDataItem())
 
         // assert
         viewModel.accountDetails.test {

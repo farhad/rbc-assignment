@@ -15,7 +15,6 @@ import io.github.farhad.rbc.databinding.AccountTypeListItemBinding
 import io.github.farhad.rbc.databinding.AccountsListFragmentBinding
 import io.github.farhad.rbc.ui.util.BaseFragment
 import io.github.farhad.rbc.ui.util.changeVisibility
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class AccountsFragment : BaseFragment() {
@@ -38,11 +37,7 @@ class AccountsFragment : BaseFragment() {
         )[AccountsViewModel::class.java]
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = AccountsListFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -66,7 +61,9 @@ class AccountsFragment : BaseFragment() {
                             binding.textviewError.text =
                                 getString(R.string.error_empty_list_accounts)
                         }
-                        else -> {} // no op
+                        else -> {
+                            // no op
+                        }
                     }
                 }
             }
@@ -94,18 +91,20 @@ class AccountsFragment : BaseFragment() {
     }
 
     class AccountsAdapter(private val clickListener: (item: AccountDataItem) -> Unit) :
-        ListAdapter<AccountDataItem, AccountsAdapter.AccountViewHolder>(AccountDataItemDiffUtil()) {
+        ListAdapter<AccountDataItem, AccountsAdapter.AccountViewHolder>(AccountDiffUtil) {
 
-        class AccountDataItemDiffUtil : DiffUtil.ItemCallback<AccountDataItem>() {
-            override fun areContentsTheSame(
-                oldItem: AccountDataItem,
-                newItem: AccountDataItem
-            ): Boolean {
-                return oldItem == newItem
-            }
+        companion object {
+            private object AccountDiffUtil : DiffUtil.ItemCallback<AccountDataItem>() {
+                override fun areContentsTheSame(
+                    oldItem: AccountDataItem,
+                    newItem: AccountDataItem
+                ): Boolean {
+                    return oldItem == newItem
+                }
 
-            override fun areItemsTheSame(oldItem: AccountDataItem, newItem: AccountDataItem): Boolean {
-                return oldItem == newItem
+                override fun areItemsTheSame(oldItem: AccountDataItem, newItem: AccountDataItem): Boolean {
+                    return oldItem == newItem
+                }
             }
         }
 
@@ -144,7 +143,7 @@ class AccountsFragment : BaseFragment() {
                             LayoutInflater.from(parent.context),
                             parent,
                             false
-                        )
+                        ), clickListener
                     )
                 }
             }
@@ -154,20 +153,20 @@ class AccountsFragment : BaseFragment() {
             holder.bind(currentList[holder.bindingAdapterPosition])
         }
 
-        abstract inner class AccountViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        abstract class AccountViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             abstract fun bind(item: AccountDataItem)
         }
 
-        inner class TypeViewHolder(private val binding: AccountTypeListItemBinding) :
-            AccountViewHolder(binding.root) {
+        class TypeViewHolder(private val binding: AccountTypeListItemBinding) : AccountViewHolder(binding.root) {
             override fun bind(item: AccountDataItem) {
                 item as AccountDataItem.Type
                 binding.textviewName.text = item.title
             }
         }
 
-        inner class ItemViewHolder(
-            private val binding: AccountItemListItemBinding
+        class ItemViewHolder(
+            private val binding: AccountItemListItemBinding,
+            private val clickListener: (item: AccountDataItem) -> Unit
         ) : AccountViewHolder(binding.root) {
 
             override fun bind(item: AccountDataItem) {

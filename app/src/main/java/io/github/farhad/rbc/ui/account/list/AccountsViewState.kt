@@ -1,5 +1,7 @@
 package io.github.farhad.rbc.ui.account.list
 
+import java.io.Serializable
+
 sealed class AccountsViewState(
     val loadingVisible: Boolean,
     val listVisible: Boolean,
@@ -43,7 +45,7 @@ sealed class AccountsViewState(
 }
 
 
-sealed class AccountDataItem {
+sealed class AccountDataItem : Serializable {
     data class Type(val title: String) : AccountDataItem()
     data class Item(
         val name: String,

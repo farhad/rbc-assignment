@@ -1,39 +1,20 @@
 package io.github.farhad.rbc.ui.navigation;
 
+import io.github.farhad.rbc.ui.account.list.AccountDataItem;
+
 public interface NavigationAction {
     final class ShowAccounts implements NavigationAction {
     }
 
     final class ShowAccountDetails implements NavigationAction {
-        private final String accountName;
-        private final String accountNumber;
-        private final String accountBalance;
-        private final String accountTypeName;
+        private final AccountDataItem.Item accountDataItem;
 
-        public ShowAccountDetails(String accountName,
-                                  String accountNumber,
-                                  String accountBalance,
-                                  String accountTypeName) {
-            this.accountName = accountName;
-            this.accountNumber = accountNumber;
-            this.accountBalance = accountBalance;
-            this.accountTypeName = accountTypeName;
+        public ShowAccountDetails(AccountDataItem.Item accountDataItem) {
+            this.accountDataItem = accountDataItem;
         }
 
-        public String getAccountName() {
-            return accountName;
-        }
-
-        public String getAccountNumber() {
-            return accountNumber;
-        }
-
-        public String getAccountBalance() {
-            return accountBalance;
-        }
-
-        public String getAccountTypeName() {
-            return accountTypeName;
+        public AccountDataItem.Item getAccountDataItem() {
+            return accountDataItem;
         }
     }
 }

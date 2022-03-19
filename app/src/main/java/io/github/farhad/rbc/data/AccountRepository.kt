@@ -22,8 +22,10 @@ class AccountRepositoryImpl @Inject constructor(
         return coroutineScope {
             try {
                 withContext(ioDispatcher) {
-                    delay(1500) // to emulate blocking work
-                    return@withContext async { return@async Result.Success(data = provider.getAccounts()) }
+                    return@withContext async {
+                        delay(1500)
+                        Result.Success(data = provider.getAccounts())
+                    }
                 }
             } catch (e: Exception) {
                 return@coroutineScope async { Result.Failure<Account>() }
@@ -60,7 +62,7 @@ class AccountRepositoryImpl @Inject constructor(
                 }
 
             } catch (e: Exception) {
-                return@coroutineScope async { return@async Result.Failure<Transaction>() }
+                return@coroutineScope async { Result.Failure<Transaction>() }
             }
         }
     }

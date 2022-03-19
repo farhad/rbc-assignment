@@ -8,16 +8,18 @@ import io.github.farhad.rbc.data.AccountRepository
 import io.github.farhad.rbc.model.Result
 import io.github.farhad.rbc.model.controller.AccountControllerImpl
 import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Test
 
 class AccountControllerImplTest {
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun when_repository_getAccountAsync_throws_exception_it_returns_failure_result() = runBlocking {
+    fun when_repository_getAccountAsync_throws_exception_it_returns_failure_result() = runTest {
         // arrange
         class MockedRepository : AccountRepository {
             override suspend fun getAccountsAsync(): Deferred<Result<Account>> {
@@ -39,8 +41,9 @@ class AccountControllerImplTest {
         Assert.assertTrue(result is Result.Failure<Account>)
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun when_repository_getAccountAsync_returns_success_it_returns_success_result() = runBlocking {
+    fun when_repository_getAccountAsync_returns_success_it_returns_success_result() = runTest {
         // arrange
         val account = TestUtils.newAccount("test-account-one", "2323", "100.23", AccountType.CHEQUING)
 

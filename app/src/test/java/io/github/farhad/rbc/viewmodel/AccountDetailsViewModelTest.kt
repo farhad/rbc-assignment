@@ -14,6 +14,7 @@ import io.github.farhad.rbc.ui.util.formatDate
 import io.github.farhad.rbc.ui.util.getFriendlyTitle
 import kotlinx.coroutines.*
 import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert
@@ -40,7 +41,7 @@ class AccountDetailsViewModelTest {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun when_setUp_is_called_it_emits_account_information_viewstate() = runBlocking {
+    fun when_setUp_is_called_it_emits_account_information_viewstate() = runTest {
         // arrange
         val account = TestUtils.newAccount("CHQ", "1222", "41.02", AccountType.CHEQUING)
 
@@ -77,7 +78,7 @@ class AccountDetailsViewModelTest {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun when_controller_getTransactionsAsync_throws_exception_it_emits_error() = runBlocking {
+    fun when_controller_getTransactionsAsync_throws_exception_it_emits_error() = runTest {
         // arrange
         val account = TestUtils.newAccount("CHQ", "1222", "41.02", AccountType.CHEQUING)
 
@@ -114,7 +115,7 @@ class AccountDetailsViewModelTest {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun when_controller_getTransactionsAsync_returns_empty_list_it_emits_emptyResult() = runBlocking {
+    fun when_controller_getTransactionsAsync_returns_empty_list_it_emits_emptyResult() = runTest {
         // arrange
         val account = TestUtils.newAccount("CHQ", "1222", "41.02", AccountType.CHEQUING)
 
@@ -151,7 +152,7 @@ class AccountDetailsViewModelTest {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun when_controller_getTransactionsAsync_returns_list_it_emits_results_with_that_list() = runBlocking {
+    fun when_controller_getTransactionsAsync_returns_list_it_emits_results_with_that_list() = runTest {
         // arrange
         val account = TestUtils.newAccount("CHQ", "1222", "41.02", AccountType.CHEQUING)
         val dateOne = Calendar.getInstance()

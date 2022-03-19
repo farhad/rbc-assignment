@@ -12,6 +12,7 @@ import io.github.farhad.rbc.ui.account.list.AccountsViewState
 import io.github.farhad.rbc.ui.util.getFriendlyTitle
 import kotlinx.coroutines.*
 import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert
@@ -37,7 +38,7 @@ class AccountViewModelTest {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun when_controller_getAccountsAsync_throws_exception_it_emits_error() = runBlocking {
+    fun when_controller_getAccountsAsync_throws_exception_it_emits_error() = runTest {
         // arrange
         class MockedController : AccountController {
             override suspend fun getAccountsAsync(): Deferred<Result<Account>> {
@@ -68,7 +69,7 @@ class AccountViewModelTest {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun when_controller_getAccountAsync_returns_empty_list_it_emits_emptyResult() = runBlocking {
+    fun when_controller_getAccountAsync_returns_empty_list_it_emits_emptyResult() = runTest {
         // arrange
         class MockedController : AccountController {
             override suspend fun getAccountsAsync(): Deferred<Result<Account>> {
@@ -101,7 +102,7 @@ class AccountViewModelTest {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun when_controller_getAccountAsync_returns_list_it_emits_result_with_that_list() = runBlocking {
+    fun when_controller_getAccountAsync_returns_list_it_emits_result_with_that_list() = runTest {
         // arrange
         val account = TestUtils.newAccount("test-account-one", "2323", "100.23", AccountType.CHEQUING)
 

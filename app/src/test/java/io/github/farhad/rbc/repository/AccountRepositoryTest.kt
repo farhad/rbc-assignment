@@ -11,8 +11,8 @@ import io.github.farhad.rbc.model.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancelChildren
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert
@@ -39,7 +39,7 @@ class AccountRepositoryTest {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun when_provider_getAccountAsync_throws_exception_it_returns_failure_result() = runBlocking {
+    fun when_provider_getAccountAsync_throws_exception_it_returns_failure_result() = runTest {
         // arrange
         class MockedAccountDataProvider : AccountDataProvider {
             override suspend fun getAccounts(): List<Account> {
@@ -67,7 +67,7 @@ class AccountRepositoryTest {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun when_provider_getAccountAsync_returns_list_it_returns_success_result_with_that_list() = runBlocking {
+    fun when_provider_getAccountAsync_returns_list_it_returns_success_result_with_that_list() = runTest {
         // arrange
         val account = newAccount("test-account-one", "2323", "100.23", AccountType.CHEQUING)
 
@@ -101,7 +101,7 @@ class AccountRepositoryTest {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun when_providers_either_getTransaction_methods_succeeds_it_returns_success_result_with_that_list() = runBlocking {
+    fun when_providers_either_getTransaction_methods_succeeds_it_returns_success_result_with_that_list() = runTest {
         // arrange
         val account = newAccount("test-account-one", "2323", "100.23", AccountType.CREDIT_CARD)
         val transaction = newTransaction("test-transaction", "23.56", Calendar.getInstance())
@@ -136,7 +136,7 @@ class AccountRepositoryTest {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun when_account_type_is_not_credit_card_it_does_not_call_provider_getAdditionalCreditCardTransactions() = runBlocking {
+    fun when_account_type_is_not_credit_card_it_does_not_call_provider_getAdditionalCreditCardTransactions() = runTest {
         // arrange
         val account = newAccount("test-account-one", "2323", "100.23", AccountType.MORTGAGE)
         val transaction = newTransaction("test-transaction", "23.56", Calendar.getInstance())
@@ -171,7 +171,7 @@ class AccountRepositoryTest {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun when_account_type_is_credit_card_it_calls_both_provider_getTransaction_methods() = runBlocking {
+    fun when_account_type_is_credit_card_it_calls_both_provider_getTransaction_methods() = runTest {
         // arrange
         val account = newAccount("test-account-one", "2323", "100.23", AccountType.CREDIT_CARD)
 
@@ -214,7 +214,7 @@ class AccountRepositoryTest {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun it_sorts_transactions_from_provider_getTransactions_combined_result_descending_by_date() = runBlocking {
+    fun it_sorts_transactions_from_provider_getTransactions_combined_result_descending_by_date() = runTest {
         // arrange
         val account = newAccount("test-account-one", "2323", "100.23", AccountType.CREDIT_CARD)
 

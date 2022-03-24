@@ -17,22 +17,28 @@ object FragmentFactory {
         return when (action) {
             null -> SplashFragment.newInstance().apply {
                 navigationTag = TAG_SPLASH
-                entryPoint = true
             }
 
             is ShowAccounts -> AccountsFragment.newInstance().apply {
                 navigationTag = TAG_ACCOUNTS
-                entryPoint = true
             }
 
             is ShowAccountDetails -> {
                 AccountDetailFragment.newInstance(action.accountDataItem).apply {
                     navigationTag = TAG_ACCOUNT_DETAILS
-                    entryPoint = false
                 }
             }
 
             else -> null
+        }
+    }
+
+    fun isEntryPoint(baseFragment: BaseFragment): Boolean {
+        return when (baseFragment) {
+            is AccountsFragment -> true
+            is SplashFragment -> true
+            is AccountDetailFragment -> false
+            else -> false
         }
     }
 }

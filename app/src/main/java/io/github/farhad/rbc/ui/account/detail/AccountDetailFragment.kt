@@ -15,6 +15,7 @@ import io.github.farhad.rbc.databinding.AccountDetailFragmentBinding
 import io.github.farhad.rbc.databinding.TransactionDateListItemBinding
 import io.github.farhad.rbc.databinding.TransactionItemListItemBinding
 import io.github.farhad.rbc.ui.account.list.AccountDataItem
+import io.github.farhad.rbc.ui.navigation.FragmentFactory
 import io.github.farhad.rbc.ui.util.BaseFragment
 import io.github.farhad.rbc.ui.util.changeVisibility
 import kotlinx.coroutines.flow.launchIn
@@ -22,6 +23,10 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 class AccountDetailFragment : BaseFragment() {
+
+    init {
+        entryPoint = FragmentFactory.isEntryPoint(this)
+    }
 
     companion object {
         private const val ACCOUNT_DATA_ITEM = "account_data_item"

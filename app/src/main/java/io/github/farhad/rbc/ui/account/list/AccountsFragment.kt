@@ -13,11 +13,15 @@ import io.github.farhad.rbc.R
 import io.github.farhad.rbc.databinding.AccountItemListItemBinding
 import io.github.farhad.rbc.databinding.AccountTypeListItemBinding
 import io.github.farhad.rbc.databinding.AccountsListFragmentBinding
+import io.github.farhad.rbc.ui.navigation.FragmentFactory
 import io.github.farhad.rbc.ui.util.BaseFragment
 import io.github.farhad.rbc.ui.util.changeVisibility
 import kotlinx.coroutines.launch
 
 class AccountsFragment : BaseFragment() {
+    init {
+        entryPoint = FragmentFactory.isEntryPoint(this)
+    }
 
     companion object {
         fun newInstance(): AccountsFragment = AccountsFragment()

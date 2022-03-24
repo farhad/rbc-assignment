@@ -10,9 +10,14 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 
 import io.github.farhad.rbc.databinding.SplashFragmentBinding;
+import io.github.farhad.rbc.ui.navigation.FragmentFactory;
 import io.github.farhad.rbc.ui.util.BaseFragment;
 
 public class SplashFragment extends BaseFragment {
+    public SplashFragment() {
+        isEntryPoint = FragmentFactory.INSTANCE.isEntryPoint(this);
+    }
+
     public static SplashFragment newInstance() {
         return new SplashFragment();
     }

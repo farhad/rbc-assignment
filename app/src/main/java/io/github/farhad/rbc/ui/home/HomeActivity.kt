@@ -37,7 +37,7 @@ class HomeActivity : DaggerAppCompatActivity() {
     override fun onStart() {
         super.onStart()
 
-        splashViewModel.navigationAction.observe(this) { action ->
+        splashViewModel.navigationAction().observe(this) { action ->
             FragmentFactory.create(action)?.let { findAndReplaceFragment(it) }
         }
 
@@ -57,8 +57,8 @@ class HomeActivity : DaggerAppCompatActivity() {
 
     override fun onBackPressed() {
         val fragment = supportFragmentManager.findFragmentById(binding.fragmentContainer.id) as BaseFragment
-        when {
-            fragment.entryPoint -> finish()
+        when (fragment.entryPoint) {
+            true -> finish()
             else -> supportFragmentManager.popBackStack()
         }
     }

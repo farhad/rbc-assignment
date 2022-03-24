@@ -26,7 +26,13 @@ class AccountDetailsViewModel @Inject constructor(
     private var _accountDetails = MutableStateFlow<AccountDetailViewState>(AccountDetailViewState.Idle())
     val accountDetails: StateFlow<AccountDetailViewState> = _accountDetails
 
+    private var dataItem: AccountDataItem? = null
+
     fun setUp(accountDataItem: AccountDataItem.Item) {
+        if (dataItem == accountDataItem)
+            return
+
+        dataItem = accountDataItem
         val accountType = fromFriendlyTitle(accountDataItem.typeName.stringOrEmpty())
 
         viewModelScope.launch {
